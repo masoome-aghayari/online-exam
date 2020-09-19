@@ -1,0 +1,125 @@
+html, body {
+    display: block;
+    justify-content: center;
+    font-family: Roboto, Arial, sans-serif;
+    font-size: 18px;
+}
+
+.searchform {
+    border: 5px solid #f1f1f1;
+    height: max-content;
+    margin: 2vh 2px;
+}
+
+input {
+    height: 5vh;
+    max-height: fit-content;
+    display: inline-block;
+    font-size: 17px;
+    width: 10vw;
+    margin-right: 1vw;
+    border: 2px solid #ccc;
+}
+
+select {
+    width: 10vw;
+    height: 5vh;
+    margin-right: 1vw;
+    font-size: 17px
+}
+
+button {
+    background-color: #8ebf42;
+    color: white;
+    padding: 1vh 1vw;
+    border: none;
+    cursor: grabbing;
+    width: fit-content;
+    font-size: 17px;
+    margin: 0;
+}
+
+h1 {
+    text-align: center;
+    padding: 2vh;
+}
+
+button:hover {
+    opacity: 0.8;
+}
+
+.formcontainer {
+    height: max-content;
+    text-align: center;
+    justify-content: center;
+}
+
+.container {
+    max-width: 100%;
+    text-align: center;
+    padding: 0;
+    margin: 1vh auto;
+}
+
+.no-pending {
+    text-align: center;
+}
+
+hr {
+    width: 90vw;
+    height: 1px;
+    background-color: #aeaeae;
+    margin: 1px auto;
+}
+
+.readOnly {
+    border: none;
+    text-align: center;
+    background: none;
+    padding-right: 0;
+    padding-left: 0;
+    margin-right: 0;
+    width: max-content;
+}
+
+form button {
+    width: max-content;
+    margin-top: 5vh;
+}
+
+form input {
+    width: 10vw;;
+    border: 1px solid #ffbb3a;
+    background: none;
+    text-align: center;
+    margin-right: 1vw;
+}
+
+.nav {
+    text-align: center;
+}
+
+.btnNav {
+    text-align: center;
+}
+
+.resultTable {
+    margin: 5vh auto;
+    width: max-content;
+    text-align: center;
+}
+
+th, tr, td {
+    text-align: center;
+    overflow: auto;
+    width: fit-content;
+}
+
+th {
+    background: #007bff;
+    color: #ffffff;
+}
+
+.table td {
+    vertical-align: center;
+}

@@ -1,0 +1,13 @@
+.next-prev {
+    text-align: center;
+}
+
+.readOnly {
+    border: none;
+    background: none;
+}
+.confirm{
+    background-color: #ff3a4d;
+    border: none;
+    margin-top:0;
+}

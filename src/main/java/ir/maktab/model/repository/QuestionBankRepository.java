@@ -1,0 +1,18 @@
+package ir.maktab.model.repository;
+
+import ir.maktab.model.entity.Question;
+import ir.maktab.model.entity.QuestionBank;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.Repository;
+import org.springframework.data.repository.query.Param;
+
+import java.util.List;
+
+@org.springframework.stereotype.Repository
+public interface QuestionBankRepository extends Repository<QuestionBank, Integer>, JpaSpecificationExecutor<QuestionBank> {
+    @Query("select qb.question from QuestionBank qb where qb.category.name = :categoryName")
+    List<Question> findAllByCategoryName(@Param("categoryName") String categoryName);
+
+    void save(QuestionBank questionBank);
+}
