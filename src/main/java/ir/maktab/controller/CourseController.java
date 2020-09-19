@@ -115,14 +115,16 @@ public class CourseController {
         ModelAndView addParticipants = new ModelAndView("addParticipants");
         List<String> categories = categoryService.findAllCategoryNames();
         List<String> roles = roleService.getUserRoles();
+        UserDto userDto = (UserDto) model.getAttribute("userDto");
         addParticipants.addObject("categories", categories)
                 .addObject("categoryName", model.getAttribute("categoryName"))
                 .addObject("courseTitles", model.getAttribute("courseTitles"))
                 .addObject("courseTitle", model.getAttribute("courseTitle"))
                 .addObject("userDtos", model.getAttribute("userDtos"))
-                .addObject("message", model.getAttribute("message"))
+                .addObject("userDto", userDto)
                 .addObject("roles", roles)
                 .addObject("roleName", model.getAttribute("roleName"))
+                .addObject("message", model.getAttribute("message"))
                 .addObject("totalPages", model.getAttribute("totalPages") == null ? 1 : model.getAttribute("totalPages"))
                 .addObject("pageNumber", model.getAttribute("pageNumber") == null ? 1 : model.getAttribute("pageNumber"));
         return addParticipants;
@@ -159,30 +161,36 @@ public class CourseController {
                                         @PathVariable(name = "courseTitle") String courseTitle,
                                         @PathVariable(name = "pageNumber") int pageNumber, Model model) {
         int totalPages = userService.countTotalPagesOfMatchedUsers(roleName, courseTitle);
-        if (totalPages == 0)
-            return new ModelAndView("message", "message", env.getProperty("No.User.Found"));
-        int limit = Integer.parseInt(env.getProperty("Page.Rows"));
-        List<UserDto> properUsers = userService.findUserByRoleAndCourseTitle(roleName, courseTitle, (pageNumber - 1), limit);
-        if (pageNumber > 1 && properUsers.isEmpty())
-            return findProperUsers(roleName, categoryName, courseTitle, pageNumber - 1, model);
-        if (properUsers.isEmpty())
+        if (totalPages == 0) {
             model.addAttribute("message", env.getProperty("No.User.Found"));
-        else
+        } else {
+            int limit = Integer.parseInt(env.getProperty("Page.Rows"));
+            List<UserDto> properUsers = userService.findUserByRoleAndCourseTitle(roleName, courseTitle, (pageNumber - 1), limit);
+            if (pageNumber > 1 && properUsers.isEmpty())
+                return findProperUsers(roleName, categoryName, courseTitle, pageNumber - 1, model);
             model.addAttribute("userDtos", properUsers);
-        List<String> courseTitleList = courseService.findCourseTitlesByCategoryName(categoryName);
-        model.addAttribute("roleName", roleName)
-                .addAttribute("categoryName", categoryName)
-                .addAttribute("courseTitle", courseTitle)
-                .addAttribute("courseTitles", courseTitleList)
-                .addAttribute("totalPages", totalPages)
-                .addAttribute("pageNumber", pageNumber);
+        }
+            List<String> courseTitleList = courseService.findCourseTitlesByCategoryName(categoryName);
+            UserDto userDto = (model.getAttribute("userDto") == null ? new UserDto() : (UserDto) model.getAttribute("userDto"));
+            model.addAttribute("roleName", roleName)
+                    .addAttribute("categoryName", categoryName)
+                    .addAttribute("courseTitle", courseTitle)
+                    .addAttribute("courseTitles", courseTitleList)
+                    .addAttribute("totalPages", totalPages)
+                    .addAttribute("pageNumber", pageNumber)
+                    .addAttribute("userDto", userDto);
         return showAddParticipantForm(model);
     }
 
-    @PostMapping(value = "/addParticipant/{courseTitle}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public String addParticipant(@RequestBody UserDto userDto, @PathVariable(name = "courseTitle") String courseTitle) {
+    @PostMapping(value = "addParticipant/{roleName}/{categoryName}/{courseTitle}/{pageNumber}")
+    public ModelAndView addParticipant(@PathVariable(name = "roleName") String roleName,
+                                       @PathVariable(name = "categoryName") String categoryName,
+                                       @PathVariable(name = "courseTitle") String courseTitle,
+                                       @PathVariable(name = "pageNumber") int pageNumber,
+                                       @ModelAttribute UserDto userDto, Model model) {
         userService.updateUserCourses(userDto, courseTitle);
-        return env.getProperty("Add.User.To.Course.Successful");
+        model.addAttribute("userDto", userDto);
+        return findProperUsers(roleName, categoryName, courseTitle, pageNumber, model);
     }
+
 }

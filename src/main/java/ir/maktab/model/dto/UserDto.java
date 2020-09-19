@@ -22,5 +22,5 @@ public class UserDto {
     private Status status;
     private Set<Course> courses;
     @JsonDeserialize(keyUsing = CustomExamDtoDeserializer.class)
-    private Map<ExamDto, Double> examDtoMark;
+    private Map<ExamDto, Integer> examDtoMark;
 }

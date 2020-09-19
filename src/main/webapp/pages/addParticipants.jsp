@@ -90,16 +90,18 @@
             </thead>
             <tbody>
             <c:forEach items="${userDtos}" var="user" varStatus="i">
-                <tr>
-                    <td><input id="name${i}" value="${user.name}" class="readOnly" readonly/></td>
-                    <td><input id="family${i}" value="${user.family}" class="readOnly" readonly/></td>
-                    <td><input id="email${i}" value="${user.email}" class="readOnly" readonly/></td>
-                    <td>
-                        <button class="btn btn-btn btn-primary btn-block save-btn" onclick="addToCourse('${i}')">
-                            Add
-                        </button>
-                    </td>
-                </tr>
+                <form:form modelAttribute="userDto"
+                           action="/admin/course/addParticipant/${roleName}/${categoryName}/${courseTitle}/${pageNumber}">
+                    <tr>
+                        <td><form:input path="name" value="${user.name}" class="readOnly" readonly="true"/></td>
+                        <td><form:input path="family" value="${user.family}" class="readOnly" readonly="true"/></td>
+                        <td><form:input path="email" value="${user.email}" class="readOnly" readonly="true"/></td>
+                        <td>
+                            <button type="submit" class="btn btn-btn btn-primary btn-block save-btn">Add</button>
+                                <%-- onclick="addToCourse('${i}')"--%>
+                        </td>
+                    </tr>
+                </form:form>
             </c:forEach>
             </tbody>
         </table>
@@ -145,12 +147,12 @@
             "/" + document.getElementById("category").value + "/" + document.getElementById("title").value + "/" + pageNumber;
     }
 
-    function addToCourse(i) {
-        const request = new XMLHttpRequest();
-        request.onreadystatechange = function () {
-            if (this.readyState === 4 && this.status === 200) {
-                window.alert(this.response);
-                getUsersList(${pageNumber});
+    /*    function addToCourse(i) {
+            const request = new XMLHttpRequest();
+            request.onreadystatechange = function () {
+                if (this.readyState === 4 && this.status === 200) {
+                    window.alert(this.response);
+                    getUsersList(${pageNumber});
             }
         };
         request.open("POST", "/admin/course/addParticipant/" + document.getElementById("title").value, true);
@@ -166,8 +168,8 @@
 
     function createJsonObject(i) {
         return {
-            "email": document.getElementById("email" + i).value,
+            "email": document.getElementById("email" + i).value
         };
-    }
+    }*/
 </script>
 </html>

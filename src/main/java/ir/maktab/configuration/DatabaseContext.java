@@ -19,7 +19,6 @@ import java.util.Properties;
 @EnableJpaRepositories(basePackages = "ir.maktab.model.repository")
 @EnableTransactionManagement
 public class DatabaseContext {
-
     @Bean
     public DriverManagerDataSource dataSource(Environment env) {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
