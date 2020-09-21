@@ -14,18 +14,42 @@
     <button type="submit" class="btn btn-success btn-group" style="margin: 2vh 2vw">Dashboard</button>
 </form>
 <div class="container">
+<div style="color: red"><strong>${message}</strong></div>
+<h4>Create New Essay Question</h4>
+<hr>
+<form:form modelAttribute="questionDto" action="/teacher/exam/add-question/new/test/process">
+    <form action="${pageContext.request.contextPath}/teacher">
+    <button type="submit" class="btn btn-success btn-group" style="margin: 2vh 2vw">Dashboard</button>
+    </form>
+    <div class="main-block">
     <div style="color: red"><strong>${message}</strong></div>
-    <h4>Create New Essay Question</h4>
-    <hr>
-    <form:form modelAttribute="questionDto" action="/teacher/exam/add-question/new/test/process">
-    <div>
-        <form:label path="title">Title:</form:label>
-        <form:input path="title" value="${questionDto.title}" name="title" required="true"/>
+    <form:form modelAttribute="questionDto" cssClass="content" action="/teacher/exam/add-question/new/test/process">
+        <form:hidden path="type"/>
+        <div class="header">
+            <h4>Create New Test Question</h4>
+            <hr>
+        </div>
+        <div class="form-group">
+            <form:label path="text" cssClass="odd-labels">Text:</form:label>
+            <form:textarea path="text" value="${questionDto.text}" name="text" cssClass="form-control"
+                           cssStyle="width: 38.3vw; height: 15vh" required="true"></form:textarea>
+        </div>
+        <div class="form-group">
+            <form:label path="title" cssClass="odd-labels">Title:</form:label>
+            <form:input path="title" value="${questionDto.title}" name="title" cssClass="form-control"
+                        required="true"></form:input>
 
-        <form:label path="text" style="width: 5vw">Text:</form:label>
-        <form:input path="text" value="${questionDto.text}" name="duration" required="true"/>
-    </div>
-    <button type="submit">Add Question</button>
+            <label for="mark" class="even-labels">Mark:</label>
+            <input type="number" id="mark" name="mark" style="width: 5vw" class="form-control" required/>
+        </div>
+        <div class="add-option-add-to-bank">
+            <button onclick="appendOption()" class="btn btn-primary btn-block op-btn">New Option</button>
+            <div class="form-check mb-2" style="margin-top: 2vh">
+                <form:checkbox path="addToBank" class="form-check-input filled-in" id="addToBank" name="addToBank"
+                               cssStyle="width: 25px; height: 25px" value="${!questionDto.addToBank}"/>
+                <label class="form-check-label" for="addToBank">Add Question To Bank</label>
+            </div>
+        </div>
     </form:form>
-</body>
-</html>
+    </body>
+    </html>

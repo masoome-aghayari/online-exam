@@ -28,8 +28,8 @@
         </div>
         <div class="form-group">
             <form:label path="text" cssClass="odd-labels">Text:</form:label>
-            <form:input path="text" value="${questionDto.text}" name="text" cssClass="form-control"
-                        cssStyle="width: 38.3vw" required="true"></form:input>
+            <form:textarea path="text" value="${questionDto.text}" name="text" cssClass="form-control"
+                        cssStyle="width: 38.3vw; height: 15vh" required="true"></form:textarea>
         </div>
         <div class="form-group">
             <form:label path="title" cssClass="odd-labels">Title:</form:label>
