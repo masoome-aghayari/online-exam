@@ -27,7 +27,6 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.mail.MessagingException;
 import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Calendar;
@@ -95,7 +94,7 @@ public class UserController {
             try {
                 confirmationTokenService.deleteTokenByUserEmail(userDto.getEmail());
                 sendMail(userDto);
-                model.addAttribute("message", env.getProperty("Resend.Email.Successful") + userDto.getEmail());
+                model.addAttribute("message", env.getProperty("Email.Resend.Successful") + userDto.getEmail());
             } catch (EmailNotSendException e) {
                 model.addAttribute("message", e.getMessage());
             }
@@ -161,7 +160,7 @@ public class UserController {
         try {
             MailService.sendMail(userDto.getEmail(), env.getProperty("Email.Verification.Subject"), mailText);
         } catch (MessagingException | IOException e) {
-            throw new EmailNotSendException(env.getProperty("Sending.Email.Failed"));
+            throw new EmailNotSendException(env.getProperty("Email.Sending.Failed"));
         }
     }
 /*

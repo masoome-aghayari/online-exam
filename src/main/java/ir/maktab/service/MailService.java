@@ -15,7 +15,7 @@ import java.util.Properties;
 public class MailService {
 
     public static void sendMail(String to, String sub, String msg) throws MessagingException, IOException {
-        FileInputStream fileInputStream = new FileInputStream("C:\\Users\\Codebanoo\\IdeaProjects\\hello-SpringMvc\\src\\main\\resources\\mail.properties");
+        FileInputStream fileInputStream = new FileInputStream("C:\\Users\\Codebanoo\\IdeaProjects\\online-exam\\src\\main\\resources\\mail.properties");
         Properties properties = new Properties();
         properties.load(fileInputStream);
         properties.put("mail.smtp.host", properties.getProperty("mail.smtp.host"));

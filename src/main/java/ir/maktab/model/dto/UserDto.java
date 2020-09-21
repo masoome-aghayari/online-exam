@@ -1,9 +1,7 @@
 package ir.maktab.model.dto;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import ir.maktab.model.entity.Course;
 import ir.maktab.model.entity.Status;
-import ir.maktab.util.CustomExamDtoDeserializer;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,6 +19,5 @@ public class UserDto {
     private String role;
     private Status status;
     private Set<Course> courses;
-    @JsonDeserialize(keyUsing = CustomExamDtoDeserializer.class)
     private Map<ExamDto, Integer> examDtoMark;
 }

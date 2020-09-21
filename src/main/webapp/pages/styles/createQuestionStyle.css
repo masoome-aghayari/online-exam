@@ -1,0 +1,60 @@
+.option-container {
+    display: block;
+}
+
+.options {
+    margin-top: 2vh;
+    display: flex;
+}
+
+.options input {
+    width: 20vw;
+    margin-left: 3.5vw;
+    margin-right: 1vw;
+}
+
+.options button {
+    width: auto;
+}
+
+.remove {
+    width: auto;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.option-input {
+    width: 25vw;
+}
+
+.odd-labels {
+    width: 3vw;
+    margin-left: 0;
+}
+
+.even-labels {
+    width: fit-content;
+    margin-left: 2vw;
+}
+
+.op-btn {
+    background-color: orange;
+    border: none;
+    width: auto;
+    margin: 2vh 3.5vw;
+}
+
+.add-btn {
+    width: 38vw;
+    margin: 4vh 3.5vw;
+}
+.form-check-label{
+    width: fit-content;
+    margin-left: 1vw;
+}
+.add-option-add-to-bank{
+    display: flex;
+}
+.checkBox{
+
+}

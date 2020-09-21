@@ -3,9 +3,7 @@ package ir.maktab.model.repository;
 import ir.maktab.model.entity.ConfirmationToken;
 import ir.maktab.model.entity.User;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
-import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 
@@ -17,8 +15,11 @@ public interface ConfirmationTokenRepository extends Repository<ConfirmationToke
     void save(ConfirmationToken token);
 
     Optional<ConfirmationToken> findByUser(User user);
-    @Query("delete from ConfirmationToken  ct where ct.user.email=:email")
-    void deleteByUser(@Param("email") String email);
+
+    /*   @Transactional
+       @Modifying*/
+    /*  @Query("delete from ConfirmationToken c where c.user.email=:email")*/
+    void deleteByUser(User user);
 
     void deleteByToken(String token);
 }

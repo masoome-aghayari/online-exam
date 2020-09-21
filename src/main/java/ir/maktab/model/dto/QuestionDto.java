@@ -1,13 +1,19 @@
 package ir.maktab.model.dto;
 
-import java.util.Set;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.util.List;
+
+@Setter
+@Getter
 public class QuestionDto {
     private String title;
     private String type;
     private String text;
-    private Set<OptionDto> options;
-    private String rightAnswer;
+    private List<String> options;
+    private int rightAnswerIndex;
     private String userAnswer;
-    private Set<ExamDto> exams;
+    private List<ExamDto> exams;
+    private boolean addToBank;
 }

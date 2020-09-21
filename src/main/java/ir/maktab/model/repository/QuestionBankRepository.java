@@ -1,5 +1,6 @@
 package ir.maktab.model.repository;
 
+import ir.maktab.model.entity.Category;
 import ir.maktab.model.entity.Question;
 import ir.maktab.model.entity.QuestionBank;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -8,6 +9,7 @@ import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 @org.springframework.stereotype.Repository
 public interface QuestionBankRepository extends Repository<QuestionBank, Integer>, JpaSpecificationExecutor<QuestionBank> {
@@ -15,4 +17,6 @@ public interface QuestionBankRepository extends Repository<QuestionBank, Integer
     List<Question> findAllByCategoryName(@Param("categoryName") String categoryName);
 
     void save(QuestionBank questionBank);
+
+    Optional<QuestionBank> findByCategory(Category category);
 }

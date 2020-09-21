@@ -25,7 +25,7 @@ public class ConfirmationToken {
     private Date expiryDate;
 
     @NonNull
-    @OneToOne(targetEntity = User.class, fetch = FetchType.EAGER)
+    @OneToOne(targetEntity = User.class)
     @JoinColumn(name = "user_id")
     private User user;
 

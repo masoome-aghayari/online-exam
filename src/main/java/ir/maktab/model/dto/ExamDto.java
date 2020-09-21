@@ -1,7 +1,5 @@
 package ir.maktab.model.dto;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import ir.maktab.util.CustomQuestionKeyDeserializer;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,6 +16,5 @@ public class ExamDto {
     private String startDate;
     private String endDate;
     private String status;
-    @JsonDeserialize(keyUsing = CustomQuestionKeyDeserializer.class)
     private Map<QuestionDto, Integer> questionDtoMarks;
 }

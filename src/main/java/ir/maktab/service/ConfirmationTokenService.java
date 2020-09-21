@@ -22,6 +22,8 @@ public class ConfirmationTokenService {
     @Autowired
     ConfirmationTokenConverter confirmationTokenConverter;
     @Autowired
+    UserService userService;
+    @Autowired
     Environment env;
 
     @Transactional
@@ -47,7 +49,8 @@ public class ConfirmationTokenService {
 
     @Transactional
     public void deleteTokenByUserEmail(String email) {
-        confirmationTokenRepository.deleteByUser(email);
+        User desiredUser = userService.findUserByEmail(email);
+        confirmationTokenRepository.deleteByUser(desiredUser);
     }
 
     @Transactional

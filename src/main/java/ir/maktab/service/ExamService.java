@@ -1,12 +1,11 @@
 package ir.maktab.service;
 
 import ir.maktab.model.dto.ExamDto;
-import ir.maktab.model.dto.QuestionDto;
 import ir.maktab.model.dto.UserDto;
 import ir.maktab.model.entity.Exam;
-import ir.maktab.model.entity.Question;
 import ir.maktab.model.entity.Status;
 import ir.maktab.model.repository.ExamRepository;
+import ir.maktab.model.repository.QuestionRepository;
 import ir.maktab.service.converter.ExamConverter;
 import ir.maktab.service.converter.QuestionDtoConverter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Set;
 
 @Service
 @PropertySources({@PropertySource("classpath:message.properties"),
@@ -34,12 +32,13 @@ public class ExamService {
     @Autowired
     CourseService courseService;
     @Autowired
-
     QuestionService questionService;
     @Autowired
     QuestionDtoConverter questionDtoConverter;
     @Autowired
     Environment env;
+    @Autowired
+    QuestionRepository questionRepository;
 
     @Transactional
     public void save(ExamDto examDto, String courseTitle) {
