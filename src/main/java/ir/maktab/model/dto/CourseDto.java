@@ -15,6 +15,6 @@ public class CourseDto {
     private String filledCapacity;
     private String startDate;
     private String endDate;
-    private Set<UserDto> courses;
+    private Set<UserDto> userDtos;
     private Set<ExamDto> exams;
 }

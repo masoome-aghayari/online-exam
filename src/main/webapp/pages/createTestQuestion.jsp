@@ -20,7 +20,7 @@
 </form>
 <div class="main-block">
     <div style="color: red"><strong>${message}</strong></div>
-    <form:form modelAttribute="questionDto" cssClass="content" action="/teacher/exam/add-question/new/test/process">
+    <form:form modelAttribute="questionDto" cssClass="content" action="/teacher/exam/add-question/new/process">
         <form:hidden path="type"/>
         <div class="header">
             <h4>Create New Test Question</h4>

@@ -5,6 +5,7 @@ import ir.maktab.model.dto.ExamDto;
 import ir.maktab.model.dto.QuestionDto;
 import ir.maktab.model.dto.UserDto;
 import ir.maktab.model.entity.QuestionType;
+import ir.maktab.model.entity.Status;
 import ir.maktab.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
@@ -18,10 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 @Controller
 @RequestMapping(value = "/teacher")
@@ -70,7 +68,7 @@ public class TeacherController {
         UserDto teacherDto = (UserDto) session.getAttribute("userDto");
         long totalPages = examService.countExamsPagesByCourseTitle(courseTitle);
         if (totalPages == 0)
-            return new ModelAndView("teacherMessage", "message", env.getProperty("No.Exam.Found"));//TODO:Dashboard button
+            return new ModelAndView("teacherMessage", "message", env.getProperty("No.Exam.Found"));
         int limit = Integer.parseInt(env.getProperty("Page.Rows"));
         List<ExamDto> examDtos = examService.findExamsByCourseTitle(courseTitle, pageNumber - 1, limit);
         ModelAndView showCourseExams = new ModelAndView("showCourseExams");
@@ -137,14 +135,26 @@ public class TeacherController {
         return testQuestion;
     }
 
-    @PostMapping(value = "exam/add-question/new/test/process")
+    @GetMapping(value = "exam/add-question/new/essay")
+    public ModelAndView showAddEssayQuestionPage(Model model) {
+        ModelAndView essayQuestion = new ModelAndView("createEssayQuestion");
+        QuestionDto questionDto = new QuestionDto();
+        questionDto.setType(QuestionType.ESSAY.name());
+        essayQuestion.addObject("questionDto", questionDto)
+                .addObject("message", model.getAttribute("message"));
+        return essayQuestion;
+    }
+
+    @PostMapping(value = "exam/add-question/new/process")
     public ModelAndView addTestQuestionToExam(HttpServletRequest request, @ModelAttribute QuestionDto questionDto,
                                               Model model) {
         HttpSession session = request.getSession(false);
         ExamDto examDto = (ExamDto) session.getAttribute("examDto");
-        List<String> options = Arrays.asList(request.getParameterValues("option"));
+        if (questionDto.getType().equals(QuestionType.TEST.name())) {
+            List<String> options = Arrays.asList(request.getParameterValues("option"));
+            questionDto.setOptions(options);
+        }
         int mark = Integer.parseInt(request.getParameter("mark"));
-        questionDto.setOptions(options);
         if (examDto.getQuestionDtoMarks() == null)
             examDto.setQuestionDtoMarks(new HashMap<>());
         examDto.getQuestionDtoMarks().put(questionDto, mark);
@@ -157,79 +167,73 @@ public class TeacherController {
             session.setAttribute("examDto", examDto);
             model.addAttribute("message", env.getProperty("Question.Add.Successful"));
         }
-        return showAddTestQuestionPage(model);
+        if (questionDto.getType().equals(QuestionType.TEST.name()))
+            return showAddTestQuestionPage(model);
+        else
+            return showAddEssayQuestionPage(model);
     }
 
-    @GetMapping(value = "exam/add-question/new/essay")
-    public ModelAndView showAddEssayQuestionPage(Model model) {
-        ModelAndView essayQuestion = new ModelAndView("createEssayQuestion");
-        QuestionDto questionDto = new QuestionDto();
-        questionDto.setType(QuestionType.ESSAY.name());
-        essayQuestion.addObject("questionDto", questionDto)
-                .addObject("message", model.getAttribute("message"));
-        return essayQuestion;
-    }
-/*
-    @PostMapping(value = "exam/add-question/new/essay/process")
-    public ModelAndView addEssayQuestionProcess(HttpServletRequest request, @ModelAttribute QuestionDto questionDto,
-                                                Model model) {
+    @GetMapping(value = "exam/add-question/bank")
+    public ModelAndView showBankQuestions(Model model, HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         ExamDto examDto = (ExamDto) session.getAttribute("examDto");
-        examDto.getQuestionDtoMarks().put(questionDto, 0);
-        return null;
+        List<QuestionDto> questions = questionBankService.findQuestionsByCategoryName(examDto);
+        if (Objects.isNull(questions)) {
+            model.addAttribute("message", env.getProperty("Empty.Bank"));
+        } else if (questions.isEmpty()) {
+            model.addAttribute("message", env.getProperty("No.More.Question.In.Bank"));
+        } else {
+            ModelAndView showBankQuestions = new ModelAndView("showBankQuestions");
+            showBankQuestions.addObject("questions", questions)
+                    .addObject("questionDto", new QuestionDto());
+            return showBankQuestions;
+        }
+        return showChooseAddQuestionMethodPage(model);
     }
 
-    @PostMapping(value = "/exams/edit/delete")
-    public ModelAndView deleteExam(@ModelAttribute ExamDto examDto, Model model, HttpServletRequest request) {
+    @PostMapping(value = "exam/add-question/bank/process")
+    public ModelAndView addFromBankProcess(@ModelAttribute QuestionDto questionDto, HttpServletRequest request,
+                                           Model model) {
+        HttpSession session = request.getSession(false);
+        ExamDto examDto = (ExamDto) session.getAttribute("examDto");
+        int mark = Integer.parseInt(request.getParameter("mark"));
+        examService.updateExamQuestions(examDto.getTitle(), questionDto, mark);
+        if (examDto.getQuestionDtoMarks() == null)
+            examDto.setQuestionDtoMarks(new HashMap<>());
+        examDto.getQuestionDtoMarks().put(questionDto, mark);
+        session.setAttribute("examDto", examDto);
+        return showBankQuestions(model, request);
+    }
+
+    @PostMapping(value = "exams/edit/delete")
+    public ModelAndView deleteExam(Model model, HttpServletRequest request) {
         HttpSession session = request.getSession();
-        Object examDto1 = session.getAttribute("examDto");
+        ExamDto examDto = (ExamDto) session.getAttribute("examDto");
         examService.deleteExamByTitle(examDto.getTitle());
         model.addAttribute("message", env.getProperty("Delete.Exam.Successful"));
-        return showEditPage(model);
+        session.removeAttribute("examDto");
+        return showCourseExams(examDto.getCourseDto().getTitle(), 1, request);
     }
 
-
-    @PostMapping(value = "/exams/stop")
-    public ModelAndView stopExam(@ModelAttribute ExamDto examDto, Model model) {
+    @PostMapping(value = "exams/stop")
+    public ModelAndView stopExam(Model model, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        ExamDto examDto = (ExamDto) session.getAttribute("examDto");
         examService.changeExamStatus(examDto.getTitle(), Status.INACTIVE);
         model.addAttribute("message", env.getProperty("Stop.Exam.Successful"));
         examDto.setStatus(Status.INACTIVE.toString());
-        return showEditPage(model);
+        session.setAttribute("examDto", examDto);
+        return showEditPage(examDto, model, request);
     }
 
-    @PostMapping(value = "/exams/activate")
-    public ModelAndView ActivateExam(@ModelAttribute ExamDto examDto, Model model) {
+    @PostMapping(value = "exams/activate")
+    public ModelAndView ActivateExam(Model model, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        ExamDto examDto = (ExamDto) session.getAttribute("examDto");
         examService.changeExamStatus(examDto.getTitle(), Status.ACTIVE);
         model.addAttribute("message", env.getProperty("Activate.Exam.Successful"));
         examDto.setStatus(Status.ACTIVE.toString());
-        return showEditPage(model);
+        session.setAttribute("examDto", examDto);
+        return showEditPage(examDto, model, request);
     }
-
-    @PostMapping(value = "exam/add-question/new/test/process")
-    public ModelAndView addNewQuestionProcess(HttpServletRequest request, @ModelAttribute QuestionDto questionDto) {
-        ExamDto examDto = (ExamDto) request.getAttribute("examDto");
-        examDto.getQuestionDtoMarks().put(questionDto, 0);
-        request.setAttribute("examDto", examDto);
-       return showAddQuestionForm(request, examDto);
-    }
-     @PostMapping(value = "exam/add-question/bank")
-    public ModelAndView showBankQuestions(@ModelAttribute ExamDto examDto, Model model) {
-        examDto = examService.findExamByTitle(examDto.getTitle());
-        List<QuestionDto> questions = questionBankService.findQuestionsByCategoryName(examDto.getCourseDto().getCategory());
-        if (Objects.isNull(questions)) {
-            model.addAttribute("message", env.getProperty("Empty.Bank"));
-            return showChooseAddQuestionMethodPage(examDto, model);
-        }
-        ModelAndView showBankQuestions = new ModelAndView("showBankQuestions");
-        showBankQuestions.addObject("examDto", examDto);
-        showBankQuestions.addObject("questions", questions);
-        return showBankQuestions;
-    }
-
-    @PostMapping(value = "exam/add-question/bank/addProcess/{examTitle}")
-    public ModelAndView addFromBankProcess(@ModelAttribute Set<QuestionDto> questionDtos,
-                                           @PathVariable(name = "examTitle") String examTitle) {
-        examService.updateQuestionsOfQuestionMark(examTitle, questionDtos);
-        return null;
-    }*/
 }

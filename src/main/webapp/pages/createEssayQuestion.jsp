@@ -8,25 +8,21 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <title>essay question</title>
+    <style type="text/css">
+        <%@include file="styles/addCourseStyle.css"%>
+        <%@include file="styles/createQuestionStyle.css"%>
+    </style>
 </head>
 <body>
 <form action="${pageContext.request.contextPath}/teacher">
     <button type="submit" class="btn btn-success btn-group" style="margin: 2vh 2vw">Dashboard</button>
 </form>
-<div class="container">
-<div style="color: red"><strong>${message}</strong></div>
-<h4>Create New Essay Question</h4>
-<hr>
-<form:form modelAttribute="questionDto" action="/teacher/exam/add-question/new/test/process">
-    <form action="${pageContext.request.contextPath}/teacher">
-    <button type="submit" class="btn btn-success btn-group" style="margin: 2vh 2vw">Dashboard</button>
-    </form>
-    <div class="main-block">
+<div class="main-block">
     <div style="color: red"><strong>${message}</strong></div>
-    <form:form modelAttribute="questionDto" cssClass="content" action="/teacher/exam/add-question/new/test/process">
+    <form:form modelAttribute="questionDto" cssClass="content" action="/teacher/exam/add-question/new/process">
         <form:hidden path="type"/>
         <div class="header">
-            <h4>Create New Test Question</h4>
+            <h4>Create New Essay Question</h4>
             <hr>
         </div>
         <div class="form-group">
@@ -41,15 +37,17 @@
 
             <label for="mark" class="even-labels">Mark:</label>
             <input type="number" id="mark" name="mark" style="width: 5vw" class="form-control" required/>
-        </div>
-        <div class="add-option-add-to-bank">
-            <button onclick="appendOption()" class="btn btn-primary btn-block op-btn">New Option</button>
+
             <div class="form-check mb-2" style="margin-top: 2vh">
                 <form:checkbox path="addToBank" class="form-check-input filled-in" id="addToBank" name="addToBank"
-                               cssStyle="width: 25px; height: 25px" value="${!questionDto.addToBank}"/>
+                               cssStyle="width: 25px; height: 25px; margin-top:0; margin-left:2vw" value="${!questionDto.addToBank}"/>
                 <label class="form-check-label" for="addToBank">Add Question To Bank</label>
             </div>
         </div>
+            <button type="submit" class="btn btn-primary btn-block add-btn"
+                    onclick="return inputsValidation()">Add Question
+            </button>
     </form:form>
-    </body>
-    </html>
+</div>
+</body>
+</html>

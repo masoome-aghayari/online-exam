@@ -26,12 +26,12 @@ public class QuestionService {
     @Autowired
     QuestionBankService questionBankService;
 
-    @Transactional
+   /* @Transactional
     public void deleteExamFromQuestion(String examTitle) {
         List<Question> questions = questionRepository.findByExamsContains(examRepository.findByTitle(examTitle));
         questions.forEach(q -> q.getExams().removeIf(e -> e.getTitle().equals(examTitle)));
         questions.forEach(q -> questionRepository.save(q));
-    }
+    }*/
 
     public boolean addQuestion(QuestionDto questionDto, ExamDto examDto, int mark) {
         if (isExists(questionDto.getText()))
@@ -51,4 +51,5 @@ public class QuestionService {
     public boolean isExists(String text) {
         return questionRepository.findByText(text).isPresent();
     }
+
 }

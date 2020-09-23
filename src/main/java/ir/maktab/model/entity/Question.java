@@ -5,7 +5,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Setter
@@ -18,11 +17,8 @@ public class Question {
     private String text;
     @Enumerated(EnumType.STRING)
     private QuestionType type;
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     private List<String> options;
     private int rightAnswerIndex;
-    @ManyToMany(fetch = FetchType.EAGER)
-    private Set<Exam> exams;
-    @Transient
     private String userAnswer;
 }

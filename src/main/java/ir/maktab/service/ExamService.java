@@ -1,8 +1,10 @@
 package ir.maktab.service;
 
 import ir.maktab.model.dto.ExamDto;
+import ir.maktab.model.dto.QuestionDto;
 import ir.maktab.model.dto.UserDto;
 import ir.maktab.model.entity.Exam;
+import ir.maktab.model.entity.Question;
 import ir.maktab.model.entity.Status;
 import ir.maktab.model.repository.ExamRepository;
 import ir.maktab.model.repository.QuestionRepository;
@@ -19,7 +21,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 @PropertySources({@PropertySource("classpath:message.properties"),
@@ -77,7 +82,6 @@ public class ExamService {
 
     @Transactional
     public void deleteExamByTitle(String examTitle) {
-        questionService.deleteExamFromQuestion(examTitle);
         examRepository.deleteExamByTitle(examTitle);
     }
 
@@ -94,6 +98,17 @@ public class ExamService {
     @Transactional
     public ExamDto findExamByTitle(String title) {
         return examConverter.convertToExamDto(examRepository.findByTitle(title));
+    }
+
+    public void updateExamQuestions(String title, QuestionDto questionDto, int mark) {
+        Exam exam = examRepository.findByTitle(title);
+        Optional<Question> question = questionRepository.findByText(questionDto.getText());
+        Map<Question, Integer> questionMarks = exam.getQuestionMarks();
+        if (questionMarks == null)
+            questionMarks = new HashMap<>();
+        if (question.isPresent())
+            questionMarks.put(question.get(), mark);
+        examRepository.save(exam);
     }
 /*
     @Transactional

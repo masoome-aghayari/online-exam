@@ -46,17 +46,17 @@
     </button>
 </form>
 <div class="main-block">
-    <div style="color: red">${message}</div>
+    <div style="color: red; margin-bottom: 2vh"><strong>${message}</strong></div>
     <form:form modelAttribute="userDto" action="/loginProcess" cssClass="content" method="Post">
         <div class="header">
             <h3 style="text-align: left">Login Form</h3>
         </div>
         <div class="form-group">
-            <form:label path="email">Email:</form:label>
+            <form:label path="email" cssStyle="margin-left: 0">Email:</form:label>
             <form:input path="email" id="email" class="form-control" required="required"/>
         </div>
         <div class="form-group">
-            <form:label path="password">Password:</form:label>
+            <form:label path="password" cssStyle="margin-left: 0">Password:</form:label>
             <form:password path="password" id="password" name="password" cssClass="form-control"
                            placeholder="Enter Password" required="required"/>
             <i class="far fa-eye btn-show-hide-pwd" data-for="password"></i>

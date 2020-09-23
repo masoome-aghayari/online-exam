@@ -16,15 +16,15 @@
 <form action="${pageContext.request.contextPath}/teacher">
     <button type="submit" class="btn btn-success btn-group" style="margin: 2vh 2vw">Dashboard</button>
 </form>
-<div style="color: red; font-size: 16px"><strong>${message}</strong></div>
-<div class="main-block">
+<div style="color: red; font-size: 16px; text-align: center"><strong>${message}</strong></div>
+<div class="main-block" style="margin-top: 10vh">
     <form>
         <div class="span2">
-            <button formaction="/teacher/exam/add-question/bank" id="bank" name="bank" class="btn btn-primary btn-block"
-                    type="submit">Add Question From Bank
+            <button formaction="/teacher/exam/add-question/bank" class="btn btn-primary btn-block" type="submit">
+                Add Question From Bank
             </button>
-            <button formaction="/teacher/exam/add-question/new/chooseType" id="newQuestion" name="newQuestion"
-                    class="btn btn-success btn-block" type="submit">Create New Question
+            <button formaction="/teacher/exam/add-question/new/chooseType" class="btn btn-success btn-block"
+                    type="submit">Create New Question
             </button>
         </div>
     </form>

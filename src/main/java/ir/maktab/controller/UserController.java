@@ -52,7 +52,7 @@ public class UserController {
     Environment env;
 
     @GetMapping(value = "/")
-    public ModelAndView showHomePage() {
+    public ModelAndView showHomePage(HttpServletRequest request) {
         return new ModelAndView("home");
     }
 
@@ -72,7 +72,6 @@ public class UserController {
         if (bindingResult.hasErrors()) {
             return "register";
         }
-//        User user = userDtoConverter.convertToSaveUser(userDto);
         userDto = userService.registerNewUser(userDto);
         ModelAndView result = new ModelAndView("result");
         String resultMessage;
@@ -128,7 +127,12 @@ public class UserController {
     }
 
     @GetMapping(value = "/login")
-    public ModelAndView showLoginPage(Model model) {
+    public ModelAndView showLoginPage(Model model, HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session != null & session.getAttribute("userDto") != null) {
+            UserDto userDto = (UserDto) session.getAttribute("userDto");
+            return new ModelAndView(userDto.getRole() + "Dashboard");
+        }
         ModelAndView login = new ModelAndView("login");
         login.addObject("userDto", new UserDto());
         login.addObject("message", model.getAttribute("message"));
@@ -147,9 +151,9 @@ public class UserController {
     }
 
     @GetMapping(value = "loginError")
-    public ModelAndView showLoginError(Model model) {
+    public ModelAndView showLoginError(Model model, HttpServletRequest request) {
         model.addAttribute("message", env.getProperty("Login.BadCredentials"));
-        return showLoginPage(model);
+        return showLoginPage(model, request);
     }
 
     private void sendMail(UserDto userDto) throws EmailNotSendException {

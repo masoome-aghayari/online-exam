@@ -16,11 +16,11 @@
 </head>
 <body onload="checkButtonsDisable()">
 <form class="content" method="Get">
-    <button type="submit" class="btn btn-success btn-group" style="margin: -3vh -37vw;"
+    <button type="submit" class="btn btn-success btn-group" style="margin: 2vh 2vw"
             formaction="${pageContext.request.contextPath}/teacher">Dashboard
     </button>
 </form>
-<div class="main-block">
+<div class="main-block" style="margin-top: 10vh">
     <form>
 
         <div class="span2">

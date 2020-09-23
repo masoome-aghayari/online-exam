@@ -33,7 +33,6 @@
     </style>
 </head>
 <body>
-
 <form class="content" method="Get">
     <button type="submit" class="btn btn-success btn-group" style="margin: -3vh -37vw;"
             formaction="${pageContext.request.contextPath}/teacher">Dashboard

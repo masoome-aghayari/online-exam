@@ -36,4 +36,7 @@ public interface ExamRepository extends Repository<Exam, Integer>, JpaSpecificat
 
     @Query("update Exam exam set exam.status= :newStatus where exam.title= :title")
     void updateStatusByTitle(@Param("title") String title, @Param("newStatus") Status status);
+
+    @Query("select exam from Exam exam where exam.title= :title")
+    Exam findQuestionMarksByExamTitle(@Param("title") String title);
 }

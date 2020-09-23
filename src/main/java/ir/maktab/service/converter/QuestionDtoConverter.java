@@ -8,7 +8,6 @@ import ir.maktab.model.repository.ExamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -19,7 +18,13 @@ public class QuestionDtoConverter {
     ExamRepository examRepository;
 
     public QuestionDto convertQuestionToDto(Question question) {
-        return null;  //TODO
+        QuestionDto questionDto = new QuestionDto();
+        questionDto.setType(question.getType().name());
+        questionDto.setText(question.getText());
+        questionDto.setOptions(question.getOptions());
+        questionDto.setRightAnswerIndex(question.getRightAnswerIndex());
+        questionDto.setTitle(question.getTitle());
+        return questionDto;
     }
 
     public Question convertQuestionDtoToSave(QuestionDto questionDto) {
@@ -27,11 +32,11 @@ public class QuestionDtoConverter {
         Exam exam = examRepository.findByTitle(questionDto.getExams().get(0).getTitle());
         question.setTitle(questionDto.getTitle());
         question.setText(questionDto.getText());
-        question.setOptions(questionDto.getOptions());
-        question.setRightAnswerIndex(questionDto.getRightAnswerIndex());
         question.setType(QuestionType.valueOf(questionDto.getType()));
-        question.setExams(new HashSet<>());
-        question.getExams().add(exam);
+        if (questionDto.getType().equals(QuestionType.TEST.name())) {
+            question.setOptions(questionDto.getOptions());
+            question.setRightAnswerIndex(questionDto.getRightAnswerIndex());
+        }
         return question;
     }
 
