@@ -109,9 +109,15 @@ public class UserService {
     }
 
     @Transactional
-    public void updateUser(String name, String family, String email, String roleName) {
-        Role role = userDtoConverter.stringToRoleConverter(roleName);
-        userRepository.update(name, family, role, email);
+    public void updateUser(UserDto userDto) {
+        Role role = userDtoConverter.stringToRoleConverter(userDto.getRole());
+        userRepository.update(userDto.getName(), userDto.getFamily(), role, userDto.getEmail());
+    }
+
+    @Transactional
+    public void updateWhenConfirm(UserDto userDto) {
+        Role role = userDtoConverter.stringToRoleConverter(userDto.getRole());
+        userRepository.updateWhenConfirm(userDto.getEmail(), userDto.getName(), userDto.getFamily(), role, Status.ACTIVE);
     }
 
     @Transactional

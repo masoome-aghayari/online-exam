@@ -39,30 +39,33 @@ public class AdminController {
     }
 
     @GetMapping(value = "pending-list/{pageNumber}")
-    public ModelAndView getPendingUsers(HttpServletRequest request, HttpServletResponse response,
-                                        @PathVariable(required = false) int pageNumber) {
+    public ModelAndView getPendingUsers(HttpServletRequest request, @PathVariable(required = false) int pageNumber) {
+        if (pageNumber < 1)
+            pageNumber = 1;
         int totalPages = userService.findNumberOfPendingUsers(Status.PENDING);
+        if (pageNumber > totalPages)
+            pageNumber = totalPages;
         int limit = Integer.parseInt(env.getProperty("Page.Rows"));
+        List<String> roles = roleService.getUserRoles();
         List<UserDto> pendingList = userService.findAllPending(pageNumber - 1, limit).getContent();
         if (pageNumber > 1 && pendingList.isEmpty())
-            return getPendingUsers(request, response, pageNumber - 1);
+            return getPendingUsers(request, pageNumber - 1);
         if (pendingList.isEmpty())
             return new ModelAndView("message", "message", env.getProperty("No.Pending.Found"));
         ModelAndView showPendingList = new ModelAndView("showPendingList");
         showPendingList.addObject("pageNumber", pageNumber)
                 .addObject("totalPages", totalPages)
                 .addObject("users", pendingList)
-                .addObject("userDto", new UserDto());
+                .addObject("userDto", new UserDto())
+                .addObject("roles", roles);
         return showPendingList;
     }
 
     @GetMapping(value = "confirm-user/{pageNumber}")
-    public ModelAndView confirmUser(HttpServletRequest request, HttpServletResponse response,
-                                    @ModelAttribute("userDto") UserDto userDto,
+    public ModelAndView confirmUser(HttpServletRequest request, @ModelAttribute("userDto") UserDto userDto,
                                     @PathVariable(required = false) int pageNumber) {
-        userService.updateUserStatus(userDto.getEmail(), Status.ACTIVE);
-        return getPendingUsers(request, response, pageNumber);
-        //TODO: update Part
+        userService.updateWhenConfirm(userDto);
+        return getPendingUsers(request, pageNumber);
     }
 
     @GetMapping(value = "searchProcess/{pageNumber}")
@@ -85,7 +88,7 @@ public class AdminController {
     @PostMapping(value = "saveChanges", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String editUser(@RequestBody UserDto userDto) {
-        userService.updateUser(userDto.getName(), userDto.getFamily(), userDto.getEmail(), userDto.getRole());
+        userService.updateUser(userDto);
         return env.getProperty("Update.Successful");
     }
 

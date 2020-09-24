@@ -160,7 +160,11 @@ public class CourseController {
                                         @PathVariable(name = "categoryName") String categoryName,
                                         @PathVariable(name = "courseTitle") String courseTitle,
                                         @PathVariable(name = "pageNumber") int pageNumber, Model model) {
+        if (pageNumber < 1)
+            pageNumber = 1;
         int totalPages = userService.countTotalPagesOfMatchedUsers(roleName, courseTitle);
+        if (pageNumber > totalPages)
+            pageNumber = totalPages;
         if (totalPages == 0) {
             model.addAttribute("message", env.getProperty("No.User.Found"));
         } else {
@@ -170,15 +174,15 @@ public class CourseController {
                 return findProperUsers(roleName, categoryName, courseTitle, pageNumber - 1, model);
             model.addAttribute("userDtos", properUsers);
         }
-            List<String> courseTitleList = courseService.findCourseTitlesByCategoryName(categoryName);
-            UserDto userDto = (model.getAttribute("userDto") == null ? new UserDto() : (UserDto) model.getAttribute("userDto"));
-            model.addAttribute("roleName", roleName)
-                    .addAttribute("categoryName", categoryName)
-                    .addAttribute("courseTitle", courseTitle)
-                    .addAttribute("courseTitles", courseTitleList)
-                    .addAttribute("totalPages", totalPages)
-                    .addAttribute("pageNumber", pageNumber)
-                    .addAttribute("userDto", userDto);
+        List<String> courseTitleList = courseService.findCourseTitlesByCategoryName(categoryName);
+        UserDto userDto = (model.getAttribute("userDto") == null ? new UserDto() : (UserDto) model.getAttribute("userDto"));
+        model.addAttribute("roleName", roleName)
+                .addAttribute("categoryName", categoryName)
+                .addAttribute("courseTitle", courseTitle)
+                .addAttribute("courseTitles", courseTitleList)
+                .addAttribute("totalPages", totalPages)
+                .addAttribute("pageNumber", pageNumber)
+                .addAttribute("userDto", userDto);
         return showAddParticipantForm(model);
     }
 
@@ -192,5 +196,4 @@ public class CourseController {
         model.addAttribute("userDto", userDto);
         return findProperUsers(roleName, categoryName, courseTitle, pageNumber, model);
     }
-
 }

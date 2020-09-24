@@ -58,4 +58,9 @@ public interface UserRepository extends Repository<User, Integer>, JpaSpecificat
     void updateCoursesByEmail(@Param("email") String email, @Param("courses") Set<Course> userCourses);
 
     List<User> findByCoursesContains(Course course);
+
+    @Modifying
+    @Query("update User set name= :newName, family= :newFamily, role= :newRole, status=:newStatus where email= :email")
+    void updateWhenConfirm(@Param("email") String email, @Param("newName") String name, @Param("newFamily") String family,
+                           @Param("newRole") Role role, @Param("newStatus") Status status);
 }

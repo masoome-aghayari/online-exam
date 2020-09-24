@@ -127,5 +127,11 @@
             "role": document.getElementById("role" + i).value
         };
     }
+
+    function gotoDesiredPage(pageNumber, tagId) {
+        document.getElementById(tagId).href = "/admin/course/addParticipant/find-userList/" + document.getElementById("role").value +
+            "/" + document.getElementById("category").value + "/" + document.getElementById("title").value + "/" + pageNumber;
+    }
+
 </script>
 </html>

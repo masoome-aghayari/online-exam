@@ -1,0 +1,20 @@
+* {
+    padding: 0;
+    margin: 0;
+    width: border-box;
+}
+
+.main-block {
+    max-width: 24vw;
+    min-height: 20vh;
+    margin: 25vh auto;
+    border-radius: 5px;
+    border: solid 1px #ccc;
+    box-shadow: 1px 2px 5px rgba(0, 0, 0, .31);
+    background: #ebebeb;
+}
+
+.span2 button {
+    margin: 3vh 2vw;
+    max-width: 20vw;
+}
