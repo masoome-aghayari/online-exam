@@ -11,7 +11,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -69,8 +68,7 @@ public class AdminController {
     }
 
     @GetMapping(value = "searchProcess/{pageNumber}")
-    public ModelAndView searchProcess(@ModelAttribute("userDto") UserDto userDto, Model model,
-                                      @PathVariable(required = false) int pageNumber) {
+    public ModelAndView searchProcess(@ModelAttribute UserDto userDto, @PathVariable(required = false) int pageNumber) {
         long totalPages = userService.getTotalNumberOfPages(userDto);
         if (totalPages == 0)
             return new ModelAndView("message", "message", env.getProperty("No.User.Found"));

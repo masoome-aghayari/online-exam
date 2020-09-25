@@ -10,23 +10,22 @@
     <title>add category</title>
     <style type="text/css">
         <%@include file="styles/addCourseStyle.css" %>
+        label {
+            margin-left: 0;
+            width: 4vw;
+        }
     </style>
 </head>
 <body>
 <form action="${pageContext.request.contextPath}/admin">
-    <button type="submit" id="dashboard" name="dashboard" class="btn btn-success btn-group"
-            style="margin: 2vh 2vw">Dashboard
+    <button type="submit" id="dashboard" name="dashboard" class="btn btn-success btn-group" style="margin: 2vh 2vw">
+        Dashboard
     </button>
 </form>
-<div>
-    <p>${message}</p>
-</div>
+<div><p><strong>${message}</strong></p></div>
 <div class="main-block" id="main-block">
-    <div>
-        <h4 style="width: max-content; margin-bottom: 5vh">Add Category Form</h4>
-    </div>
-    <form:form modelAttribute="category" action="/admin/category/add"
-               class="content" id="main-form" method="POST">
+    <div><h4 style="width: max-content; margin-bottom: 5vh">Add Category Form</h4></div>
+    <form:form modelAttribute="category" action="/admin/category/add" class="content" id="main-form" method="POST">
         <div class="form-group">
             <form:label path="name">Name:</form:label>
             <form:input path="name" placeholder="name" type="text" class="form-control"

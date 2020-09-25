@@ -12,6 +12,9 @@
     <title>add course form</title>
     <style type="text/css">
         <%@include file="styles/addCourseStyle.css" %>
+        label {
+            margin-left: 0;
+        }
     </style>
 </head>
 <body>
@@ -30,7 +33,7 @@
         </div>
         <div class="form-group">
             <form:label path="category">Category:</form:label>
-            <form:select path="category" cssClass="dropdown" required="required" cssStyle="width: 12vw">
+            <form:select path="category" cssClass="dropdown form-control" required="required" cssStyle="width: 12vw">
                 <option value="">--</option>
                 <c:forEach items="${categories}" var="category">
                     <option value="${category.name}">${category.name}</option>

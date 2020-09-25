@@ -14,6 +14,10 @@
         <%@include file="styles/addCourseStyle.css" %>
         <%@include file="styles/tableStyle.css"%>
         <%@include file="styles/paginationStyle.css"%>
+        .form-control {
+            display: inline;
+            width: 12vw;
+        }
     </style>
 </head>
 <body>
@@ -34,21 +38,22 @@
             <hr>
             <div class="container">
                 <label for="role" style="width: 2vw">Role:</label>
-                <select id="role" name="role" class="dropdowns" required="required" onchange="checkRole()">
+                <select id="role" name="role" class="form-control" required="required" onchange="checkRole()">
                     <option value="${roleName}">${roleName}</option>
                     <c:forEach items="${roles}" var="role">
                         <option value="${role}">${role}</option>
                     </c:forEach>
                 </select>
-                <label for="category" style="margin-right: 10px">Category:</label>
-                <select id="category" name="category" class="dropdowns" required="required" onchange="findCourses()">
+                <label for="category" style="margin-right: 10px; width: 4vw">Category:</label>
+                <select id="category" name="category" class="form-control" required="required"
+                        onchange="findCourses()">
                     <option value="${categoryName}">${categoryName}</option>
                     <c:forEach items="${categories}" var="category">
                         <option value="${category}">${category}</option>
                     </c:forEach>
                 </select>
                 <label for="title" style="width:2vw">Title:</label>
-                <select id="title" name="title" class="dropdowns" required="required"
+                <select id="title" name="title" class="form-control" required="required"
                         onchange="getUsersList('1')">
                     <option value="${courseTitle}">${courseTitle}</option>
                     <c:forEach items="${courseTitles}" var="title">
@@ -115,8 +120,11 @@
     const totalPages = parseInt(${totalPages});
     const notnull = Boolean(${userDtos!=null});
     if (notnull) {
-        let begin , end;
-        if ((totalPages <= 3) || (pageNumber === 1)) {
+        let begin, end;
+        if ((totalPages <= 3)) {
+            begin = 1;
+            end = totalPages;
+        } else if (pageNumber === 1) {
             begin = 1;
             end = 3;
         } else if ((pageNumber < totalPages - 1) && (pageNumber > 1)) {

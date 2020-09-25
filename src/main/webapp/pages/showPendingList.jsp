@@ -15,7 +15,7 @@
         <%@include file="styles/paginationStyle.css"%>
     </style>
 </head>
-<body onload="checkPageNumber()">
+<body>
 <form action="/admin" style="margin: 0">
     <button type="submit" id="dashboard" class="btn btn-success btn-group" style="margin: 2vh 2vw">Dashboard</button>
 </form>
@@ -70,7 +70,10 @@
     const notnull = Boolean(${users!=null});
     if (notnull) {
         let begin, end;
-        if ((totalPages <= 3) || (pageNumber === 1)) {
+        if ((totalPages <= 3)) {
+            begin = 1;
+            end = totalPages;
+        } else if (pageNumber === 1) {
             begin = 1;
             end = 3;
         } else if ((pageNumber < totalPages - 1) && (pageNumber > 1)) {

@@ -10,19 +10,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <style type="text/css">
         <%@include file="styles/searchStyle.css"%>
-        .save-btn {
-            background-color: #ffbb3a;
-            border: none;
-            margin-top: 0;
-        }
 
-        input {
-            overflow: visible;
-            height: 4vh;
-            border-radius: 4px;
-            width: 12vw;
-            border: 1px solid skyblue;
-        }
     </style>
 </head>
 <body onload="checkPageNumber()">
@@ -37,28 +25,31 @@
         <hr>
         <div class="container">
             <label for="category"><strong>Category:</strong></label>
-            <select id="category" class="dropdown" name="category">
-                <option value="${courseDto.category}">--</option>
+            <select id="category" class="form-control" name="category">
+                <option value="${courseDto.category}">${courseDto.category}</option>
                 <c:forEach items="${categories}" var="category">
                     <option value="${category.name}">${category.name}</option>
                 </c:forEach>
             </select>
 
             <label for="title"><strong>Title:</strong></label>
-            <input id="title" value="${courseDto.title}" name="title"/>
+            <input id="title" value="${courseDto.title}" name="title" class="form-control"/>
 
             <label for="duration"><strong>Duration:</strong></label>
-            <input type="number" id="duration" value="${courseDto.duration}" name="duration"/>
+            <input type="number" id="duration" value="${courseDto.duration}" name="duration" class="form-control"
+                   style="width: 5vw"/>
 
             <label for="capacity"><strong>Capacity:</strong></label>
-            <input type="number" id="capacity" value="${courseDto.capacity}" name="capacity"/>
+            <input type="number" id="capacity" value="${courseDto.capacity}" name="capacity" class="form-control"
+                   style="width: 5vw"/>
 
             <label for="startDate"><strong>Start Date:</strong></label>
-            <input type="date" id="startDate" value="${courseDto.startDate}" name="startDate"/>
+            <input type="date" id="startDate" value="${courseDto.startDate}" name="startDate" class="form-control"/>
 
             <label for="endDate"><strong>End Date:</strong></label>
-            <input type="date" id="endDate" value="${courseDto.endDate}" name="endDate"/>
-            <button formaction="/admin/course/searchProcess/1">Search</button>
+            <input type="date" id="endDate" value="${courseDto.endDate}" name="endDate" class="form-control"/>
+            <button formaction="/admin/course/searchProcess/1" style="border-radius: 4px; margin-top: 2vh">Search
+            </button>
         </div>
     </div>
     <div style="text-align: center">
@@ -71,7 +62,7 @@
     </div>
 </form>
 <div class="resultTable">
-    <table class="table table-hover table table-bordered">
+    <table class="table table-hover table table-bordered" style="margin: 0 auto;">
         <thead>
         <tr>
             <th>Category</th>
@@ -85,15 +76,16 @@
         <tbody>
         <c:forEach items="${courses}" var="exam" varStatus="i">
             <tr>
-                <td><input id="category${i}" class="readOnly" value="${exam.category}" readonly/></td>
-                <td><input id="title${i}" class="readOnly" value="${exam.title}" readonly/></td>
-                <td><input type="number" id="duration${i}" value="${exam.duration}"/></td>
-                <td><input type="number" id="capacity${i}" value="${exam.capacity}"/></td>
-                <td><input type="date" id="startDate${i}" value="${exam.startDate}"/></td>
-                <td><input type="date" id="endDate${i}" value="${exam.endDate}"/></td>
+                <td><input id="category${i}" class="readOnly" style="width: 7vw" value="${exam.category}" readonly/>
+                </td>
+                <td><input id="title${i}" class="readOnly" style="width: 7vw" value="${exam.title}" readonly/></td>
+                <td><input type="number" id="duration${i}" style="width: 4vw" value="${exam.duration}"/></td>
+                <td><input type="number" id="capacity${i}" style="width: 4vw" value="${exam.capacity}"/></td>
+                <td><input type="date" id="startDate${i}" style="width: 10vw" value="${exam.startDate}"/></td>
+                <td><input type="date" id="endDate${i}" style="width: 10vw" value="${exam.endDate}"/></td>
                 <td>
                     <button class="btn btn-btn btn-success btn-block save-btn" onclick="saveChanges('${i}')">
-                        Save Changes
+                        update
                     </button>
                 </td>
             </tr>
