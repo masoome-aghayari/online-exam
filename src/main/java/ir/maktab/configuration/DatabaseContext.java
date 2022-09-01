@@ -14,7 +14,6 @@ import java.util.Properties;
 
 @Configuration
 @ComponentScan(basePackages = "ir.maktab")
-@Import(PasswordEncoderBean.class)
 @PropertySource("classpath:database.properties")
 @EnableJpaRepositories(basePackages = "ir.maktab.model.repository")
 @EnableTransactionManagement
