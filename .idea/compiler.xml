@@ -9,6 +9,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="online-exam-system" />
         <module name="online-exam" />
+        <module name="spring-maven-mvc" />
       </profile>
     </annotationProcessing>
   </component>
