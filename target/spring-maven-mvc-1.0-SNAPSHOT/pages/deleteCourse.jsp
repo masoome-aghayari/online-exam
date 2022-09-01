@@ -12,6 +12,10 @@
     <title>delete course</title>
     <style type="text/css">
         <%@include file="styles/addCourseStyle.css" %>
+        label{
+            margin-left: 0;
+            width: 4vw;
+        }
     </style>
 </head>
 <body>
@@ -30,7 +34,7 @@
         </div>
         <div class="form-group">
             <label for="title">Title:</label>
-            <select id="title" class="dropdown" name="title" required="required">
+            <select id="title" class="dropdown form-control" name="title" required="required">
                 <option value="">--</option>
                 <c:forEach items="${titleList}" var="title">
                     <option value="${title}">${title}</option>

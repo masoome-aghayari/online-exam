@@ -12,6 +12,14 @@
     <title>delete category</title>
     <style type="text/css">
         <%@include file="styles/addCourseStyle.css" %>
+        select {
+            border-radius: 4px;
+        }
+
+        label {
+            margin-left: 0;
+            width: 4vw;
+        }
     </style>
 </head>
 <body>
@@ -20,17 +28,13 @@
             style="margin: 2vh 2vw">Dashboard
     </button>
 </form>
+<div><p><strong>${message}</strong></p></div>
 <div class="main-block">
-    <div>
-        <p style="width: max-content">${message}</p>
-    </div>
+    <div class="header"><h4 style="width: max-content; margin-bottom: 5vh">Delete Category Form</h4></div>
     <form action="${pageContext.request.contextPath}/admin/category/delete" class="content" method="POST">
-        <div class="header">
-            <h4 style="width: max-content; margin-bottom: 5vh; text-align: left">Delete Category Form</h4>
-        </div>
         <div class="form-group">
             <label for="name">Name:</label>
-            <select id="name" class="dropdown" name="name" required="required">
+            <select id="name" class="dropdown form-control" name="name" required="required">
                 <option value="">--</option>
                 <c:forEach items="${nameList}" var="name">
                     <option value="${name}">${name}</option>

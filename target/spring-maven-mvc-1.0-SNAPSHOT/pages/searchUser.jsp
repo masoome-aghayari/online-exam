@@ -10,19 +10,6 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <style type="text/css">
         <%@include file="styles/searchStyle.css"%>
-        .save-btn {
-            background-color: #ffbb3a;
-            border: none;
-            margin-top: 0;
-        }
-
-        input {
-            overflow: visible;
-            height: 4vh;
-            border-radius: 4px;
-            width: 12vw;
-            border: 1px solid skyblue;
-        }
     </style>
 </head>
 <body onload="checkPageNumber()">
@@ -37,22 +24,21 @@
         <hr>
         <div class="container">
             <label for="name"><strong>FirstName:</strong></label>
-            <input id="name" value="${userDto.name}" name="name"/>
+            <input id="name" value="${userDto.name}" name="name" class="form-control"/>
 
             <label for="family"><strong>LastName:</strong></label>
-            <input id="family" value="${userDto.family}" name="family"/>
+            <input id="family" value="${userDto.family}" name="family" class="form-control" style="width: 15vw"/>
 
             <label for="role"><strong>Role:</strong></label>
-            <select id="role" class="dropdown" name="role">
-                <option value="${userDto.role}">--</option>
+            <select id="role" class="form-control" name="role">
+                <option value="${userDto.role}">${userDto.role}</option>
                 <c:forEach items="${roles}" var="role">
                     <option value="${role}">${role}</option>
                 </c:forEach>
             </select>
-
             <label for="email"><strong>Email:</strong></label>
-            <input id="email" value="${userDto.email}" name="email" style="width: 25vw"/>
-            <button formaction="/admin/searchProcess/1">Search</button>
+            <input id="email" value="${userDto.email}" name="email" class="form-control" style="width: 25vw"/>
+            <button formaction="/admin/searchProcess/1" style="margin-top: 2vh; border-radius: 4px">Search</button>
         </div>
     </div>
     <div style="text-align: center">
@@ -62,34 +48,43 @@
         <button id="next" class="btn btn-primary btn-group" formaction="/admin/searchProcess/${pageNumber+1}">Next
         </button>
     </div>
-</form>
-<div class="resultTable">
-    <table class="table table-hover table table-bordered">
-        <thead>
-        <tr>
-            <th>Firstname</th>
-            <th>LastName</th>
-            <th>Email</th>
-            <th>Role</th>
-        </tr>
-        </thead>
-        <tbody>
-        <c:forEach items="${users}" var="user" varStatus="i">
+    <div class="resultTable">
+        <table class="table table-hover table table-bordered" style="margin-top: 2vh">
+            <thead>
             <tr>
-                <td><input id="name${i}" value="${user.name}"/></td>
-                <td><input id="family${i}" value="${user.family}"/></td>
-                <td><input id="email${i}" class="readOnly" value="${user.email}" readonly/></td>
-                <td><input id="role${i}" value="${user.role}"/></td>
-                <td>
-                    <button class="btn btn-btn btn-success btn-block save-btn" onclick="saveChanges('${i}')">
-                        Save Changes
-                    </button>
-                </td>
+                <th>Firstname</th>
+                <th>LastName</th>
+                <th>Email</th>
+                <th>Role</th>
             </tr>
-        </c:forEach>
-        </tbody>
-    </table>
-</div>
+            </thead>
+            <tbody>
+            <c:forEach items="${users}" var="user" varStatus="i">
+                <tr>
+                    <td><input id="name${i}" value="${user.name}" pattern="^[a-zA-Z ]*$"
+                               title="just alphabets are allowed" required/></td>
+                    <td><input id="family${i}" value="${user.family}" pattern="^[a-zA-Z ]*$"
+                               title="just alphabets are allowed" style="width: 15vw" required/></td>
+                    <td><input id="email${i}" class="readOnly" value="${user.email}" readonly style="width: 20vw"/></td>
+                    <td>
+                        <select id="role${i}" name="role" required="required" class="dropdown" style="margin-right: 0">
+                            <option value="${user.role}">${user.role}</option>
+                            <c:forEach items="${roles}" var="role">
+                                <option value="${role}">${role}</option>
+                            </c:forEach>
+                        </select>
+                    </td>
+                    <td>
+                        <button class="btn btn-btn btn-success btn-block save-btn" onclick="saveChanges('${i}')">
+                            update
+                        </button>
+                    </td>
+                </tr>
+            </c:forEach>
+            </tbody>
+        </table>
+    </div>
+</form>
 </body>
 <script>
     function checkPageNumber() {
@@ -126,6 +121,11 @@
             "email": document.getElementById("email" + i).value,
             "role": document.getElementById("role" + i).value
         };
+    }
+
+    function gotoDesiredPage(pageNumber, tagId) {
+        document.getElementById(tagId).href = "/admin/course/addParticipant/find-userList/" + document.getElementById("role").value +
+            "/" + document.getElementById("category").value + "/" + document.getElementById("title").value + "/" + pageNumber;
     }
 </script>
 </html>

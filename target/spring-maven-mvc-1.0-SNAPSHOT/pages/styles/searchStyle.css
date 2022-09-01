@@ -6,7 +6,6 @@ html, body {
 }
 
 .searchform {
-    border: 5px solid #f1f1f1;
     height: max-content;
     margin: 2vh 2px;
 }
@@ -79,7 +78,6 @@ hr {
     padding-right: 0;
     padding-left: 0;
     margin-right: 0;
-    width: max-content;
 }
 
 form button {
@@ -104,7 +102,7 @@ form input {
 }
 
 .resultTable {
-    margin: 5vh auto;
+    margin: 1vh auto;
     width: max-content;
     text-align: center;
 }
@@ -122,4 +120,43 @@ th {
 
 .table td {
     vertical-align: center;
+}
+
+.save-btn {
+    background-color: #ffbb3a;
+    border: none;
+    margin-top: 0;
+}
+
+input {
+    overflow: visible;
+    height: 4vh;
+    border-radius: 4px;
+    border: 1px solid skyblue;
+}
+
+.dropdown {
+    border: 1px solid orange;
+    border-radius: 4px;
+    width: 7vw;
+    margin-right: 1vw;
+    height: 4vh;
+}
+
+table td input, table td select {
+    margin-right: 0;
+}
+
+.container {
+    font-size: 16px;
+}
+
+.form-control {
+    text-align: left;
+    width: 10vw;
+    display: inline;
+}
+
+input[type=date] {
+    width: 13vw;
 }
