@@ -1,13 +1,15 @@
 package ir.maktab.onlineexam.controller;
 
+import ir.maktab.onlineexam.model.dto.ErrorModel;
+import ir.maktab.onlineexam.model.dto.ResponseModel;
+import ir.maktab.onlineexam.model.dto.SearchResultModel;
 import ir.maktab.onlineexam.model.dto.UserDto;
 import ir.maktab.onlineexam.model.entity.Status;
 import ir.maktab.onlineexam.service.RoleService;
 import ir.maktab.onlineexam.service.UserService;
-import ir.maktab.onlineexam.service.converter.UserDtoConverter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -19,18 +21,19 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @Controller
-@RequestMapping(value = "/admin")
+@RequestMapping(value = "${admin.base.url}")
 @PropertySource("classpath:message.properties")
 @PreAuthorize("hasAuthority('ADMIN')")
 public class AdminController {
-    @Autowired
-    UserService userService;
-    @Autowired
-    RoleService roleService;
-    @Autowired
-    UserDtoConverter userDtoConverter;
-    @Autowired
-    Environment env;
+    private final UserService userService;
+    private final RoleService roleService;
+    private final Environment env;
+
+    public AdminController(UserService userService, RoleService roleService, Environment env) {
+        this.userService = userService;
+        this.roleService = roleService;
+        this.env = env;
+    }
 
     @GetMapping(value = "")
     public ModelAndView adminDashboard(HttpServletRequest request, HttpServletResponse response) {
@@ -67,20 +70,48 @@ public class AdminController {
         return getPendingUsers(request, pageNumber);
     }
 
-    @GetMapping(value = "searchProcess/{pageNumber}")
-    public ModelAndView searchProcess(@ModelAttribute UserDto userDto, @PathVariable(required = false) int pageNumber) {
+    @PostMapping(value = "search/{pageNumber}")
+    public ResponseModel search(@ModelAttribute UserDto userDto, @PathVariable(required = false) int pageNumber) {
         long totalPages = userService.getTotalNumberOfPages(userDto);
-        if (totalPages == 0)
-            return new ModelAndView("message", "message", env.getProperty("No.User.Found"));
-        int limit = Integer.parseInt(env.getProperty("Page.Rows"));
-        List<UserDto> matchedUsers = userService.findMaxMatch(userDto, pageNumber - 1, limit);
-        ModelAndView searchUser = new ModelAndView("searchUser");
-        searchUser.addObject("users", matchedUsers)
-                .addObject("roles", roleService.getUserRoles())
-                .addObject("pageNumber", pageNumber)
-                .addObject("totalPages", totalPages)
-                .addObject("userDto", userDto);
-        return searchUser;
+        ResponseModel responseModel;
+        if (totalPages == 0) {
+            responseModel = getErrorResponseModel();
+        } else {
+            int limit = Integer.parseInt(env.getProperty("Page.Rows"));
+            List<UserDto> matchedUsers = userService.findMaxMatch(userDto, pageNumber - 1, limit);
+            List<String> userRoles = roleService.getUserRoles();
+            responseModel = getSearchResultResponseModel(userDto, pageNumber, totalPages, matchedUsers, userRoles);
+        }
+        return responseModel;
+    }
+
+    private ResponseModel<SearchResultModel> getSearchResultResponseModel(UserDto userDto,
+                                                                          int pageNumber,
+                                                                          long totalPages,
+                                                                          List<UserDto> matchedUsers,
+                                                                          List<String> userRoles) {
+        ResponseModel<SearchResultModel> responseModel = new ResponseModel<>();
+        SearchResultModel searchResultModel = buildSearchResultModel(userDto, pageNumber, totalPages, matchedUsers, userRoles);
+        responseModel.setData(searchResultModel);
+        return responseModel;
+    }
+
+    private SearchResultModel buildSearchResultModel(UserDto userDto, int pageNumber,
+                                                     long totalPages, List<UserDto> matchedUsers,
+                                                     List<String> userRoles) {
+        return SearchResultModel.builder()
+                .matchedUsers(matchedUsers)
+                .pageNumber(pageNumber)
+                .totalPages(totalPages)
+                .userDto(userDto)
+                .roles(userRoles)
+                .build();
+    }
+
+    private ResponseModel<ErrorModel> getErrorResponseModel() {
+        ResponseModel<ErrorModel> responseModel = new ResponseModel<>();
+        ErrorModel data = new ErrorModel(env.getProperty("No.User.Found"), HttpStatus.OK);
+        return responseModel;
     }
 
     @PostMapping(value = "saveChanges", consumes = MediaType.APPLICATION_JSON_VALUE)
