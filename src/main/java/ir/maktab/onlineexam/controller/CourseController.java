@@ -105,7 +105,7 @@ public class CourseController {
     @ResponseBody
     public String editCourse(@RequestBody CourseDto courseDto) {
         courseService.updateCourse(courseDto);
-        return env.getProperty("Update.Successful");
+        return env.getProperty("update.successful");
     }
 
     @GetMapping(value = "/addParticipant")

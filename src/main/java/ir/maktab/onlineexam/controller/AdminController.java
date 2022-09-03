@@ -1,6 +1,9 @@
 package ir.maktab.onlineexam.controller;
 
-import ir.maktab.onlineexam.model.dto.*;
+import ir.maktab.onlineexam.model.dto.ErrorModel;
+import ir.maktab.onlineexam.model.dto.ResponseModel;
+import ir.maktab.onlineexam.model.dto.SearchResultModel;
+import ir.maktab.onlineexam.model.dto.UserDto;
 import ir.maktab.onlineexam.model.entity.Status;
 import ir.maktab.onlineexam.service.RoleService;
 import ir.maktab.onlineexam.service.UserService;
@@ -9,15 +12,14 @@ import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping(value = "${admin.base.url}")
 @PropertySource("classpath:message.properties")
 @PreAuthorize("hasAuthority('ADMIN')")
@@ -32,12 +34,12 @@ public class AdminController {
         this.env = env;
     }
 
-    @GetMapping(value = "")
-    public ModelAndView adminDashboard(HttpServletRequest request, HttpServletResponse response) {
-        return new ModelAndView("ADMINDashboard");
+    @GetMapping(value = "/dashboard")
+    public void getDashboard(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.sendRedirect("ADMINDashboard");
     }
 
-    @GetMapping(value = "pending-list/{pageNumber}")
+    @GetMapping(value = "/pending-list/{pageNumber}")
     public ResponseModel getPendingUsers(HttpServletRequest request, @PathVariable(required = false) int pageNumber) {
         ResponseModel responseModel;
         if (pageNumber < 1)
@@ -58,14 +60,14 @@ public class AdminController {
         return responseModel;
     }
 
-    @PostMapping(value = "confirm/user/{pageNumber}")
+    @PostMapping(value = "/confirm/user/{pageNumber}")
     public ResponseModel confirmUser(HttpServletRequest request, @ModelAttribute("userDto") UserDto userDto,
-                                                       @PathVariable(required = false) int pageNumber) {
+                                     @PathVariable(required = false) int pageNumber) {
         userService.updateWhenConfirm(userDto);
         return getPendingUsers(request, pageNumber);
     }
 
-    @PostMapping(value = "search/{pageNumber}")
+    @PostMapping(value = "/search/{pageNumber}")
     public ResponseModel search(@ModelAttribute UserDto userDto, @PathVariable(required = false) int pageNumber) {
         long totalPages = userService.getTotalNumberOfPages(userDto);
         ResponseModel responseModel;
@@ -78,6 +80,15 @@ public class AdminController {
             responseModel = getSearchResultResponseModel(userDto, pageNumber, totalPages, matchedUsers, userRoles);
         }
         return responseModel;
+    }
+
+    @PostMapping(value = "/update/user", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseModel<String> editUser(@RequestBody UserDto userDto) {
+        userService.updateUser(userDto);
+        ResponseModel<String> responseModel = new ResponseModel<>();
+        responseModel.setData(env.getProperty("update.successful"));
+        return responseModel;
+
     }
 
     private ResponseModel<SearchResultModel> getSearchResultResponseModel(UserDto userDto,
@@ -108,13 +119,6 @@ public class AdminController {
         ErrorModel data = new ErrorModel(env.getProperty(propertyName), status);
         responseModel.setData(data);
         return responseModel;
-    }
-
-    @PostMapping(value = "saveChanges", consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public String editUser(@RequestBody UserDto userDto) {
-        userService.updateUser(userDto);
-        return env.getProperty("Update.Successful");
     }
 
   /*@PostMapping(value = "confirm-all")  TODO
