@@ -1,9 +1,6 @@
 package ir.maktab.onlineexam.controller;
 
-import ir.maktab.onlineexam.model.dto.ErrorModel;
-import ir.maktab.onlineexam.model.dto.ResponseModel;
-import ir.maktab.onlineexam.model.dto.SearchResultModel;
-import ir.maktab.onlineexam.model.dto.UserDto;
+import ir.maktab.onlineexam.model.dto.*;
 import ir.maktab.onlineexam.model.entity.Status;
 import ir.maktab.onlineexam.service.RoleService;
 import ir.maktab.onlineexam.service.UserService;
@@ -41,7 +38,8 @@ public class AdminController {
     }
 
     @GetMapping(value = "pending-list/{pageNumber}")
-    public ModelAndView getPendingUsers(HttpServletRequest request, @PathVariable(required = false) int pageNumber) {
+    public ResponseModel getPendingUsers(HttpServletRequest request, @PathVariable(required = false) int pageNumber) {
+        ResponseModel responseModel;
         if (pageNumber < 1)
             pageNumber = 1;
         int totalPages = userService.findNumberOfPendingUsers(Status.PENDING);
@@ -51,21 +49,18 @@ public class AdminController {
         List<String> roles = roleService.getUserRoles();
         List<UserDto> pendingList = userService.findAllPending(pageNumber - 1, limit).getContent();
         if (pageNumber > 1 && pendingList.isEmpty())
-            return getPendingUsers(request, pageNumber - 1);
-        if (pendingList.isEmpty())
-            return new ModelAndView("message", "message", env.getProperty("No.Pending.Found"));
-        ModelAndView showPendingList = new ModelAndView("showPendingList");
-        showPendingList.addObject("pageNumber", pageNumber)
-                .addObject("totalPages", totalPages)
-                .addObject("users", pendingList)
-                .addObject("userDto", new UserDto())
-                .addObject("roles", roles);
-        return showPendingList;
+            responseModel = getPendingUsers(request, pageNumber - 1);
+        else if (pendingList.isEmpty())
+            responseModel = getErrorResponseModel("no.pending.user.found", HttpStatus.OK);
+        else {
+            responseModel = getSearchResultResponseModel(new UserDto(), pageNumber, totalPages, pendingList, roles);
+        }
+        return responseModel;
     }
 
-    @GetMapping(value = "confirm-user/{pageNumber}")
-    public ModelAndView confirmUser(HttpServletRequest request, @ModelAttribute("userDto") UserDto userDto,
-                                    @PathVariable(required = false) int pageNumber) {
+    @PostMapping(value = "confirm/user/{pageNumber}")
+    public ResponseModel confirmUser(HttpServletRequest request, @ModelAttribute("userDto") UserDto userDto,
+                                                       @PathVariable(required = false) int pageNumber) {
         userService.updateWhenConfirm(userDto);
         return getPendingUsers(request, pageNumber);
     }
@@ -75,7 +70,7 @@ public class AdminController {
         long totalPages = userService.getTotalNumberOfPages(userDto);
         ResponseModel responseModel;
         if (totalPages == 0) {
-            responseModel = getErrorResponseModel();
+            responseModel = getErrorResponseModel("no.user.found", HttpStatus.OK);
         } else {
             int limit = Integer.parseInt(env.getProperty("rows.per.page"));
             List<UserDto> matchedUsers = userService.findMaxMatch(userDto, pageNumber - 1, limit);
@@ -108,9 +103,10 @@ public class AdminController {
                 .build();
     }
 
-    private ResponseModel<ErrorModel> getErrorResponseModel() {
+    private ResponseModel<ErrorModel> getErrorResponseModel(String propertyName, HttpStatus status) {
         ResponseModel<ErrorModel> responseModel = new ResponseModel<>();
-        ErrorModel data = new ErrorModel(env.getProperty("No.User.Found"), HttpStatus.OK);
+        ErrorModel data = new ErrorModel(env.getProperty(propertyName), status);
+        responseModel.setData(data);
         return responseModel;
     }
 

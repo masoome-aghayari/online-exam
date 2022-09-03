@@ -111,7 +111,7 @@ public class CourseController {
     @GetMapping(value = "/addParticipant")
     public ModelAndView showAddParticipantForm(Model model) {
         if (!userService.isExists())
-            return new ModelAndView("message", "message", env.getProperty("No.User.Found"));
+            return new ModelAndView("message", "message", env.getProperty("no.user.found"));
         ModelAndView addParticipants = new ModelAndView("addParticipants");
         List<String> categories = categoryService.findAllCategoryNames();
         List<String> roles = roleService.getUserRoles();
@@ -166,7 +166,7 @@ public class CourseController {
         if (pageNumber > totalPages)
             pageNumber = totalPages;
         if (totalPages == 0) {
-            model.addAttribute("message", env.getProperty("No.User.Found"));
+            model.addAttribute("message", env.getProperty("no.user.found"));
         } else {
             int limit = Integer.parseInt(env.getProperty("rows.per.page"));
             List<UserDto> properUsers = userService.findUserByRoleAndCourseTitle(roleName, courseTitle, (pageNumber - 1), limit);
