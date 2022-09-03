@@ -90,7 +90,7 @@ public class CourseController {
         long totalPages = courseService.getNumberOfMatchedPages(courseDto);
         if (totalPages == 0)
             return new ModelAndView("message", "message", env.getProperty("No.Course.Found"));
-        int limit = Integer.parseInt(env.getProperty("Page.Rows"));
+        int limit = Integer.parseInt(env.getProperty("rows.per.page"));
         List<CourseDto> matchedCourses = courseService.findMaxMatch(courseDto, pageNumber - 1, limit);
         ModelAndView searchResult = new ModelAndView("searchCourse");
         searchResult.addObject("courses", matchedCourses)
@@ -168,7 +168,7 @@ public class CourseController {
         if (totalPages == 0) {
             model.addAttribute("message", env.getProperty("No.User.Found"));
         } else {
-            int limit = Integer.parseInt(env.getProperty("Page.Rows"));
+            int limit = Integer.parseInt(env.getProperty("rows.per.page"));
             List<UserDto> properUsers = userService.findUserByRoleAndCourseTitle(roleName, courseTitle, (pageNumber - 1), limit);
             if (pageNumber > 1 && properUsers.isEmpty())
                 return findProperUsers(roleName, categoryName, courseTitle, pageNumber - 1, model);

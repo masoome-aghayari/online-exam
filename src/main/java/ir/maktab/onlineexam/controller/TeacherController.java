@@ -53,7 +53,7 @@ public class TeacherController {
         if (totalPages == 0)
             return new ModelAndView("teacherMessage", "message", env.getProperty("No.Course.Found"));
         List<CourseDto> teacherCourses = courseService.findTeacherCourses(teacherDto, pageNumber - 1,
-                Integer.parseInt(env.getProperty("Page.Rows")));
+                Integer.parseInt(env.getProperty("rows.per.page")));
         ModelAndView teacherCourse = new ModelAndView("showTeacherCourses");
         teacherCourse.addObject("pageNumber", pageNumber)
                 .addObject("totalPages", totalPages)
@@ -69,7 +69,7 @@ public class TeacherController {
         long totalPages = examService.countExamsPagesByCourseTitle(courseTitle);
         if (totalPages == 0)
             return new ModelAndView("teacherMessage", "message", env.getProperty("No.Exam.Found"));
-        int limit = Integer.parseInt(env.getProperty("Page.Rows"));
+        int limit = Integer.parseInt(env.getProperty("rows.per.page"));
         List<ExamDto> examDtos = examService.findExamsByCourseTitle(courseTitle, pageNumber - 1, limit);
         ModelAndView showCourseExams = new ModelAndView("showCourseExams");
         ExamDto examDto = new ExamDto();

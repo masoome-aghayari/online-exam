@@ -63,7 +63,7 @@ public class UserService {
     @Transactional
     public int findNumberOfPendingUsers(Status status) {
         int totalPending = userRepository.findByStatus(status, RoleName.ADMIN.name()).size();
-        int rowsNumberInPage = Integer.parseInt(env.getProperty("Page.Rows"));
+        int rowsNumberInPage = Integer.parseInt(env.getProperty("rows.per.page"));
         double pages = (double) totalPending / rowsNumberInPage;
         return (int) Math.ceil(pages);
     }
@@ -103,7 +103,7 @@ public class UserService {
         Role role = roleService.getRoleByName(userDto.getRole());
         long totalMatched = userRepository.count(UserSpecifications.findMaxMatch(userDto.getName(), userDto.getFamily(),
                 userDto.getEmail(), role));
-        int rowsNumberInPage = Integer.parseInt(env.getProperty("Page.Rows"));
+        int rowsNumberInPage = Integer.parseInt(env.getProperty("rows.per.page"));
         double pages = (double) totalMatched / rowsNumberInPage;
         return (int) Math.ceil(pages);
     }
@@ -160,7 +160,7 @@ public class UserService {
         Role role = roleService.getRoleByName(roleName);
         Course course = courseService.findCourseByTitle(courseTitle);
         long totalMatched = userRepository.countUserByRoleAndCoursesNotContains(role, course);
-        int rowsNumberInPage = Integer.parseInt(env.getProperty("Page.Rows"));
+        int rowsNumberInPage = Integer.parseInt(env.getProperty("rows.per.page"));
         double pages = (double) totalMatched / rowsNumberInPage;
         return (int) Math.ceil(pages);
     }

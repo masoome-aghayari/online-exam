@@ -68,7 +68,7 @@ public class CourseService {
     @Transactional
     public int getNumberOfPages() {
         int totalCourses = courseRepository.countAll();
-        int rowsNumberInPage = Integer.parseInt(env.getProperty("Page.Rows"));
+        int rowsNumberInPage = Integer.parseInt(env.getProperty("rows.per.page"));
         double pages = (double) totalCourses / rowsNumberInPage;
         return (int) Math.ceil(pages);
     }
@@ -101,7 +101,7 @@ public class CourseService {
         int duration = courseDtoConverter.stringToIntConverter(courseDto.getDuration());
         long totalMatched = courseRepository.count(CourseSpecifications.findMaxMatch(category, courseDto.getTitle(),
                 duration, capacity, startDate, endDate));
-        int rowsNumberInPage = Integer.parseInt(env.getProperty("Page.Rows"));
+        int rowsNumberInPage = Integer.parseInt(env.getProperty("rows.per.page"));
         double pages = (double) totalMatched / rowsNumberInPage;
         return (int) Math.ceil(pages);
     }
@@ -143,7 +143,7 @@ public class CourseService {
     public long getNumberOfTeacherCoursesPage(UserDto teacherDto) {
         User teacher = userService.findUserByEmail(teacherDto.getEmail());
         long totalCourses = courseRepository.countByParticipantsContains(teacher);
-        int rowsNumberInPage = Integer.parseInt(env.getProperty("Page.Rows"));
+        int rowsNumberInPage = Integer.parseInt(env.getProperty("rows.per.page"));
         double pages = (double) totalCourses / rowsNumberInPage;
         return (int) Math.ceil(pages);
     }

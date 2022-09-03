@@ -47,7 +47,7 @@ public class AdminController {
         int totalPages = userService.findNumberOfPendingUsers(Status.PENDING);
         if (pageNumber > totalPages)
             pageNumber = totalPages;
-        int limit = Integer.parseInt(env.getProperty("Page.Rows"));
+        int limit = Integer.parseInt(env.getProperty("rows.per.page"));
         List<String> roles = roleService.getUserRoles();
         List<UserDto> pendingList = userService.findAllPending(pageNumber - 1, limit).getContent();
         if (pageNumber > 1 && pendingList.isEmpty())
@@ -77,7 +77,7 @@ public class AdminController {
         if (totalPages == 0) {
             responseModel = getErrorResponseModel();
         } else {
-            int limit = Integer.parseInt(env.getProperty("Page.Rows"));
+            int limit = Integer.parseInt(env.getProperty("rows.per.page"));
             List<UserDto> matchedUsers = userService.findMaxMatch(userDto, pageNumber - 1, limit);
             List<String> userRoles = roleService.getUserRoles();
             responseModel = getSearchResultResponseModel(userDto, pageNumber, totalPages, matchedUsers, userRoles);

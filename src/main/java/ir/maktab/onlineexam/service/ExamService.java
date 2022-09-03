@@ -61,7 +61,7 @@ public class ExamService {
     @Transactional
     public long countExamsPagesByCourseTitle(String courseTitle) {
         long totalExams = examRepository.countByCourseTitle(courseTitle);
-        int rowsNumberInPage = Integer.parseInt(env.getProperty("Page.Rows"));
+        int rowsNumberInPage = Integer.parseInt(env.getProperty("rows.per.page"));
         double pages = (double) totalExams / rowsNumberInPage;
         return (int) Math.ceil(pages);
     }
