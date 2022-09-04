@@ -23,18 +23,23 @@ import java.util.*;
 @PropertySources({@PropertySource("classpath:message.properties"),
         @PropertySource("classpath:constant-numbers.properties")})
 public class UserService {
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    PasswordEncoder passwordEncoder;
-    @Autowired
-    UserDtoConverter userDtoConverter;
-    @Autowired
-    RoleService roleService;
-    @Autowired
-    CourseService courseService;
-    @Autowired
-    Environment env;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final UserDtoConverter userDtoConverter;
+    private final RoleService roleService;
+    private final CourseService courseService;
+    private final Environment env;
+
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder,
+                       UserDtoConverter userDtoConverter, RoleService roleService,
+                       CourseService courseService, Environment env) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.userDtoConverter = userDtoConverter;
+        this.roleService = roleService;
+        this.courseService = courseService;
+        this.env = env;
+    }
 
     @Transactional
     public UserDto registerNewUser(UserDto userDto) {
@@ -52,7 +57,8 @@ public class UserService {
 
     @Transactional
     public User findUserByEmail(String email) {
-        return userRepository.findByEmail(email).orElse(null);
+        Optional<User> byEmail = userRepository.findByEmail(email);
+        return byEmail.orElse(null);
     }
 
     @Transactional
