@@ -171,4 +171,8 @@ public class UserService {
         users.forEach(user -> user.getCourses().removeIf(course -> course.getTitle().equals(courseTitle)));
         users.forEach(user -> userRepository.save(user));
     }
+
+    public void confirmAllPendingUsers() {
+        userRepository.confirmAllPendingUsers();
+    }
 }

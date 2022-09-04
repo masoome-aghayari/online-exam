@@ -91,6 +91,12 @@ public class AdminController {
 
     }
 
+    @GetMapping(value = "/confirm/all")
+    public ResponseModel<Boolean> confirmAll() {
+        userService.confirmAllPendingUsers();
+        return new ResponseModel<>(true);
+    }
+
     private ResponseModel<SearchResultModel> getSearchResultResponseModel(UserDto userDto,
                                                                           int pageNumber,
                                                                           long totalPages,
@@ -120,17 +126,4 @@ public class AdminController {
         responseModel.setData(data);
         return responseModel;
     }
-
-  /*@PostMapping(value = "confirm-all")  TODO
-    public String confirmAll(@ModelAttribute("userListWrapper") UserListWrapper userListWrapper, Model model) {
-        ArrayList<UserDto> users = userListWrapper.getUsers();
-        for (UserDto user : users) {
-            confirmUser(user, model);
-        }
-        return getPendingUsers(model);
-    }*/
-  /* @RequestParam(required = false, name = "name") String name,
-                                @RequestParam(required = false, name = "family") String family,
-                                @RequestParam(required = false, name = "email") String email,
-                                @RequestParam(required = false, name = "role") String role,*/
 }

@@ -11,13 +11,14 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.query.Param;
+import org.springframework.lang.NonNull;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
 @org.springframework.stereotype.Repository
-public interface UserRepository extends Repository<User, Integer>, JpaSpecificationExecutor<User> {
+public interface UserRepository<findByUserStatusW> extends Repository<User, Integer>, JpaSpecificationExecutor<User> {
 
     User save(User user);
 
@@ -26,16 +27,17 @@ public interface UserRepository extends Repository<User, Integer>, JpaSpecificat
     void update(@Param("newName") String newName, @Param("newFamily") String newFamily, @Param("newRole") Role role,
                 @Param("email") String email);
 
-    List<User> findAll();
-
-    Optional<User> findByEmail(String email);
-
     @Modifying
     @Query("update User user set user.status = :status where user.email = :email")
     void updateByStatus(@Param("email") String email, @Param("status") Status status);
 
-    @Query("select u.status from User u where u.email= :email")
-    Status findUserStatus(@Param("email") String email);
+    @Modifying
+    @Query("update User u set u.status= 'ACTIVE' where u.status= 'PENDING'")
+    void confirmAllPendingUsers();
+
+    List<User> findAll();
+
+    Optional<User> findByEmail(String email);
 
     Optional<User> findByEmailAndPassword(String email, String password);
 
@@ -43,6 +45,9 @@ public interface UserRepository extends Repository<User, Integer>, JpaSpecificat
     List<User> findByStatus(@Param("status") Status status, @Param("role") String role);
 
     Page<User> findAllByStatus(Status pending, Pageable pageable);
+
+    @Query("select u.status from User u where u.email= :email")
+    Status findUserStatus(@Param("email") String email);
 
     @Query("SELECT COUNT(u) FROM User u")
     int countAll();
