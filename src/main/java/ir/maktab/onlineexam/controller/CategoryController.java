@@ -1,8 +1,8 @@
 package ir.maktab.onlineexam.controller;
 
+import ir.maktab.onlineexam.model.dto.ResponseModel;
 import ir.maktab.onlineexam.model.entity.Category;
 import ir.maktab.onlineexam.service.CategoryService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.security.access.annotation.Secured;
@@ -15,18 +15,16 @@ import org.springframework.web.servlet.ModelAndView;
 import java.util.List;
 
 @Controller
-@RequestMapping(value = "/admin/category")
+@RequestMapping(value = "${category.base.url}")
 @PropertySource("classpath:message.properties")
 @PreAuthorize("hasAuthority('ADMIN')")
 public class CategoryController {
-    @Autowired
-    CategoryService categoryService;
-    @Autowired
-    Environment env;
+    private final CategoryService categoryService;
+    private final Environment env;
 
-    @GetMapping(value = "")
-    public String showCategoryMenu() {
-        return "categoryMenu";
+    public CategoryController(CategoryService categoryService, Environment env) {
+        this.categoryService = categoryService;
+        this.env = env;
     }
 
     @GetMapping(value = "/add")
@@ -38,10 +36,10 @@ public class CategoryController {
     }
 
     @PostMapping(value = "/add")
-    public String addCategoryProcess(@ModelAttribute("category") Category category, Model model) {
-        model.addAttribute("message", categoryService.addCategory(category) != null ?
-                env.getProperty("Category.Add.Successful") : env.getProperty("Category.Duplicate"));
-        return "addCategory";
+    public ResponseModel<String> addCategory(@ModelAttribute("category") Category category) {
+        String responseMessage = categoryService.addCategory(category) != null ?
+                env.getProperty("category.add.successful") : env.getProperty("category.duplicate");
+         return new ResponseModel<>(responseMessage);
     }
 
     @Secured("1")
