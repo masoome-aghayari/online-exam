@@ -35,7 +35,7 @@ public class AdminController {
     }
 
     @GetMapping(value = "/dashboard")
-    public void getDashboard(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void getDashboard(HttpServletResponse response) throws IOException {
         response.sendRedirect("ADMINDashboard");
     }
 
