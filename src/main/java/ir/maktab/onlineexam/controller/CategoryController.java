@@ -14,7 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping(value = "${category.base.url}")
 @PropertySource("classpath:message.properties")
 @PreAuthorize("hasAuthority('ADMIN')")
