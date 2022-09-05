@@ -40,7 +40,8 @@ public class CourseService {
     Environment env;
 
     @Transactional
-    public void addCourse(Course course) {
+    public void addCourse(CourseDto courseDto) {
+        Course course = courseDtoConverter.convertToSaveCourse(courseDto);
         courseRepository.save(course);
     }
 

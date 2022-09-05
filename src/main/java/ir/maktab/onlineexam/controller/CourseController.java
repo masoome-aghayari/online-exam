@@ -1,21 +1,19 @@
 package ir.maktab.onlineexam.controller;
 
 import ir.maktab.onlineexam.model.dto.CourseDto;
+import ir.maktab.onlineexam.model.dto.ResponseModel;
 import ir.maktab.onlineexam.model.dto.UserDto;
 import ir.maktab.onlineexam.model.entity.Category;
-import ir.maktab.onlineexam.model.entity.Course;
 import ir.maktab.onlineexam.model.entity.RoleName;
 import ir.maktab.onlineexam.service.CategoryService;
 import ir.maktab.onlineexam.service.CourseService;
 import ir.maktab.onlineexam.service.RoleService;
 import ir.maktab.onlineexam.service.UserService;
 import ir.maktab.onlineexam.service.converter.CourseDtoConverter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -64,11 +62,9 @@ public class CourseController {
     }
 
     @PostMapping(value = "/add")
-    public ModelAndView addCourseProcess(CourseDto courseDto, Model model) {
-        Course course = courseDtoConverter.convertToSaveCourse(courseDto);
-        courseService.addCourse(course);
-        model.addAttribute("message", env.getProperty("Course.Added.Successfully"));
-        return showAddForm(model);
+    public ResponseModel<String> addCourse(CourseDto courseDto, Model model) {
+        courseService.addCourse(courseDto);
+        return new ResponseModel<>(env.getProperty("course.added.successfully"));
     }
 
     @GetMapping(value = "/delete")

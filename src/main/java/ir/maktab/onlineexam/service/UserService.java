@@ -156,7 +156,7 @@ public class UserService {
             userCourses.add(course);
             desiredUser.setCourses(userCourses);
             course.getParticipants().add(desiredUser);
-            courseService.addCourse(course);
+          //  courseService.addCourse(course);
             userRepository.save(desiredUser);
         }
     }

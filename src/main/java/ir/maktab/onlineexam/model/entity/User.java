@@ -30,6 +30,6 @@ public class User {
     @Column(name = "exam_mark")
     @LazyCollection(LazyCollectionOption.FALSE)
     private Map<Exam, Double> examMarks;
-    @ManyToMany(mappedBy = "participants", fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "participants", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     private Set<Course> courses;
 }
