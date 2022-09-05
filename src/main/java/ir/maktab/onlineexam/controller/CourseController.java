@@ -27,18 +27,23 @@ import java.util.List;
 @PropertySource("classpath:message.properties")
 @PreAuthorize("hasAuthority('ADMIN')")
 public class CourseController {
-    @Autowired
-    CourseService courseService;
-    @Autowired
-    CourseDtoConverter courseDtoConverter;
-    @Autowired
-    CategoryService categoryService;
-    @Autowired
-    UserService userService;
-    @Autowired
-    RoleService roleService;
-    @Autowired
-    Environment env;
+    private final CourseService courseService;
+    private final CourseDtoConverter courseDtoConverter;
+    private final CategoryService categoryService;
+    private final UserService userService;
+    private final RoleService roleService;
+    private final Environment env;
+
+    public CourseController(CourseService courseService, CourseDtoConverter courseDtoConverter,
+                            CategoryService categoryService, UserService userService,
+                            RoleService roleService, Environment env) {
+        this.courseService = courseService;
+        this.courseDtoConverter = courseDtoConverter;
+        this.categoryService = categoryService;
+        this.userService = userService;
+        this.roleService = roleService;
+        this.env = env;
+    }
 
     @GetMapping(value = "")
     public String courseMenu() {
