@@ -55,10 +55,9 @@ public class CategoryController {
     }
 
     @PostMapping(value = "/delete")
-    public ModelAndView deleteCourseProcess(@RequestParam(required = false, name = "name") String name, Model model) {
+    public ResponseModel<String> deleteCategory(@RequestParam(name = "name") String name) {
         categoryService.deleteCategory(name);
-        model.addAttribute("message", env.getProperty("Category.Delete.Successful"));
-        return showDeleteForm(model);
+        return new ResponseModel<>(env.getProperty("category.delete.successful"));
         //TODO : DELETE ALL COURSES OF THIS CATEGORY
     }
 }
