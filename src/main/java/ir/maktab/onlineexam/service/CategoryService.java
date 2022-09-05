@@ -37,6 +37,7 @@ public class CategoryService {
     public List<String> findAllCategoryNames() {
         return categoryRepository.findAllCategoryNames();
     }
+
     @Transactional
     public void deleteCategory(String name) {
         categoryRepository.deleteByName(name);
