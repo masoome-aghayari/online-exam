@@ -79,10 +79,9 @@ public class CourseController {
     }
 
     @PostMapping(value = "/delete")
-    public ModelAndView deleteCourseProcess(@RequestParam(required = false, name = "title") String title, Model model) {
+    public ResponseModel<String> deleteCourse(@RequestParam(required = false, name = "title") String title, Model model) {
         courseService.deleteCourse(title);
-        model.addAttribute("message", env.getProperty("Course.Deleted.Successfully"));
-        return showDeleteForm(model);
+        return new ResponseModel<>(env.getProperty("course.deleted.successfully"));
     }
 
     @GetMapping(value = "searchProcess/{pageNumber}")
